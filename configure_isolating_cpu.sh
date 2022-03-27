@@ -3,10 +3,10 @@
 
 function usage() {
     echo "Usage:"
-    echo "      $0 <test|confiure>"
+    echo "      $0 <test|configure>"
 }
 
-option=$2
+option=$1
 echo "$0::$1::$2::$3"
 if [[ "$option" == "test" ]]; then
     current_config=$(cat /boot/cmdline.txt)
