@@ -1,4 +1,4 @@
-#! bin/sh 
+#! /bin/sh 
 # For more info: https://github.com/raspberrypi/linux/blob/rpi-3.2.27/Documentation/kernel-parameters.txt
 
 function usage() {
