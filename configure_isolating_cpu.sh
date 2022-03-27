@@ -7,13 +7,15 @@ function usage() {
 }
 
 option=$1
-echo "$0::$1::$2::$3"
 if [[ "$option" == "test" ]]; then
     current_config=$(cat /boot/cmdline.txt)
     echo "Current config: '$current_config'"
 
     current_isolated_cpu=$(cat /sys/devices/system/cpu/isolated)
     echo "Current isolated cpu: '$current_isolated_cpu'"
+
+    current_max_kernal=$(cat /sys/devices/system/cpu/kernel_max)
+    echo "Current kernel max: '$current_max_kernal'"
 elif [[ "$option" == "configure" ]]; then
     user_who=$(whoami)
     if [[ "$user_who" == "root" ]]; then 
