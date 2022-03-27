@@ -20,7 +20,7 @@ elif [[ "$option" == "configure" ]]; then
         arg_isolate_cpu="isolcpus=3"
         current_config=$(cat /boot/cmdline.txt)
         new_config="$current_config $arg_isolate_cpu"
-        echo -n  > /boot/cmdline.txt
+        echo -n "$new_config" > /boot/cmdline.txt
         echo "Added isolated CPU"
         echo "Previous Config: $current_config"
         echo "     New Config: $new_config"
