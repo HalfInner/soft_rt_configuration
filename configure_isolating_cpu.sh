@@ -13,14 +13,14 @@ if [[ "$opition" -eq "test" ]]; then
 
     current_isolated_cpu=$(cat /sys/devices/system/cpu/isolated)
     echo "Current isolated cpu: '$current_isolated_cpu'"
-elif [[ "$opition" -eq "configure" ]] 
+elif [[ "$opition" -eq "configure" ]]; then
     user_who=$(whoami)
     if [[ "user_who" -eq "root" ]]; then 
         arg_isolate_cpu="isolcpus=3"
         echo "$arg_isolate_cpu" >> /boot/cmdline.txt
         echo "Added isolated CPU"
     else
-        echo "Script has to be executed by the root"
+        echo "Script has to be executed by the 'root' but was by '$user_who'"
     fi 
 else 
     usage()
