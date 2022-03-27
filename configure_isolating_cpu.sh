@@ -23,5 +23,5 @@ elif [[ "$opition" -eq "configure" ]]; then
         echo "Script has to be executed by the 'root' but was by '$user_who'"
     fi 
 else 
-    usage()
+    usage
 fi
