@@ -24,7 +24,4 @@ elif [[ "$opition" -eq "configure" ]]; then
     fi 
 else 
     usage()
-    exit -1
 fi
-
-
