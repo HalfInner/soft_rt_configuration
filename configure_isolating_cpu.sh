@@ -7,13 +7,13 @@ function usage() {
 }
 
 option=$1
-if [[ "$opition" -eq "test" ]]; then
+if [[ "$option" -eq "test" ]]; then
     current_config=$(cat /boot/cmdline.txt)
     echo "Current config: '$current_config'"
 
     current_isolated_cpu=$(cat /sys/devices/system/cpu/isolated)
     echo "Current isolated cpu: '$current_isolated_cpu'"
-elif [[ "$opition" -eq "configure" ]]; then
+elif [[ "$option" -eq "configure" ]]; then
     user_who=$(whoami)
     if [[ "user_who" -eq "root" ]]; then 
         arg_isolate_cpu="isolcpus=3"
