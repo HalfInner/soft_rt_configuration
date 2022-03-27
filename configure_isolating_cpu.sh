@@ -18,7 +18,7 @@ elif [[ "$option" == "configure" ]]; then
     user_who=$(whoami)
     if [[ "$user_who" == "root" ]]; then 
         arg_isolate_cpu="isolcpus=3"
-        echo "$arg_isolate_cpu" >> /boot/cmdline.txt
+        echo -n " $arg_isolate_cpu" >> /boot/cmdline.txt
         echo "Added isolated CPU"
     else
         echo "Script has to be executed by the 'root' but was by '$user_who'"
