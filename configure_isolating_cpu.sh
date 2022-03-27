@@ -6,7 +6,7 @@ function usage() {
     echo "      $0 <test|confiure>"
 }
 
-option=$1
+option=$2
 if [[ "$option" -eq "test" ]]; then
     current_config=$(cat /boot/cmdline.txt)
     echo "Current config: '$current_config'"
