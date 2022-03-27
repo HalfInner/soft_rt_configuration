@@ -1,0 +1,1 @@
+cat /boot/cmdline.txt
