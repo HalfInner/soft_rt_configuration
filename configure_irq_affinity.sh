@@ -11,8 +11,8 @@ if [[ "$option" == "test" ]]; then
     for irq in /proc/irq/* ; do
         [ -L "${d%/}" ] && continue
         echo "IRQ Affinities:"
-        irq_affinity_list=$(cat $d/smp_affinity_list)
-        echo "IRQ${d}: $irq_affinity_list"
+        irq_affinity_list=$(cat $irq/smp_affinity_list)
+        echo "IRQ${irq}: $irq_affinity_list"
     done
 elif [[ "$option" == "configure" ]]; then
     echo "NotSupported"
