@@ -1,5 +1,5 @@
 #! /bin/sh 
-# For more info: https://www.kernel.org/doc/html/latest/core-api/irq/irq-affinity.html
+# For more info: https://www.kernel.org/doc/html/latest/core-api/irq/irq-affinity.html and https://cs.uwaterloo.ca/~brecht/servers/apic/SMP-affinity.txt
 
 function usage() {
     echo "Usage:"
