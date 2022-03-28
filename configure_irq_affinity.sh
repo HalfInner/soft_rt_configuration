@@ -9,8 +9,9 @@ function usage() {
 option=$1
 if [[ "$option" == "test" ]]; then
     echo "IRQ Affinities:"
-    for irq in "/proc/irq/*/smp_affinity_list" ; do
-        irq_affinity_list=$(cat $irq)
+    for irq in "/proc/irq/*" ; do
+        [ ! -f "${irq}/smp_affinity_list" ] && continue
+        irq_affinity_list=$(cat $irq/smp_affinity_list)
         echo "IRQ${irq}: $irq_affinity_list"
     done
 elif [[ "$option" == "configure" ]]; then
