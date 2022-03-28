@@ -10,7 +10,7 @@ option=$1
 if [[ "$option" == "test" ]]; then
     echo "IRQ Affinities:"
     for irq in /proc/irq/* ; do
-        [ -L "${d%/}" ] && continue
+        [ -L "${irq%/}" ] && continue
         irq_affinity_list=$(cat $irq/smp_affinity_list)
         echo "IRQ${irq}: $irq_affinity_list"
     done
