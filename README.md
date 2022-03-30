@@ -4,6 +4,7 @@ Univerisity Project. Configure one of the common linux distrubution to work in d
 
 ## Drafts:
 
+# Isolated cpu processes - restover of configuration
 Persisent process - even with isolcpu 
 ```txt
 PSR     PID COMMAND
@@ -18,3 +19,6 @@ PSR     PID COMMAND
 1. cpuhp     - obsrrving life
 1. migration - migration
 1. ksoftirqd - K-soft-irq-d
+
+# IRQ
+Configuring irq affinity on Raspberry PI OS is not possible. Raspberry pi has no configurable irq, but a script is providede.
