@@ -14,7 +14,11 @@ if [[ "$option" == "test" ]]; then
         echo "IRQ:${irq}: $irq_affinity_list"
     done
 elif [[ "$option" == "configure" ]]; then
-    echo "NotSupported"
+    for irq in /proc/irq/*/smp_affinity_list ; do
+        irq_affinity_list=$(cat $irq)
+        cores_to_use="0-2"
+        echo "$cores_to_use" > $irq
+    done
 else 
     usage
 fi
