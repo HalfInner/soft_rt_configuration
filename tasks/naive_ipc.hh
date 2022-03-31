@@ -53,8 +53,8 @@ public:
 
   void deinitialize() { mq_close(mq_); }
 
-  void send_data(std::vector<std::byte> &payload) {
-    if (mq_send(mq_, reinterpret_cast<char *>(payload.data()), payload.size(),
+  void send_data(const std::vector<std::byte> &payload) {
+    if (mq_send(mq_, reinterpret_cast<const char*>(payload.data()), payload.size(),
                 0) == -1) {
       perror("ERROR:");
       throw std::runtime_error(
