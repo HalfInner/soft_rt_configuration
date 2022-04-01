@@ -8,7 +8,6 @@
 #include <random>
 #include <thread>
 
-
 #include "naive_ipc.hh"
 
 using namespace std::chrono_literals;
@@ -34,8 +33,8 @@ int main() {
                    [](auto el) -> std::byte { return std::byte{el}; });
 
     server_a.send_data(v);
-    std::transform(begin(arr) + elements_to_send, begin(arr) + elements_to_send + elements_to_send,
-                   begin(v),
+    std::transform(begin(arr) + elements_to_send,
+                   begin(arr) + elements_to_send + elements_to_send, begin(v),
                    [](auto el) -> std::byte { return std::byte{el}; });
 
     server_b.send_data(v);

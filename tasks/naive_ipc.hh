@@ -68,8 +68,7 @@ public:
   }
 
   std::vector<std::byte> receive() {
-    int length {0};
-    if (length = mq_receive(mq_, reinterpret_cast<char *>(buf_.data()),
+    if (mq_receive(mq_, reinterpret_cast<char *>(buf_.data()),
                             MSG_BUFFER_SIZE, NULL) == -1) {
       std::string e{"naive_ipc::MQ: Not able to receive message to client"};
       e += strerror(errno);

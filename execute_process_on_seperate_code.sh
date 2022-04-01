@@ -18,7 +18,7 @@ defualt_isolated_cpu=3
 if [[ "$option" == "test" ]]; then
     echo "Not Implemented"
 elif [[ "$option" == "configure" ]]; then
-    taskset -c $defualt_isolated_cpu $option2
+    taskset -c $defualt_isolated_cpu $program
 else 
     usage
 fi
