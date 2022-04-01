@@ -12,15 +12,15 @@
 
 using namespace std::chrono_literals;
 int main() {
-  std::cout << "Starting client A...";
-  naive_ipc::MQ client{"/A"};
+  std::cout << "Starting client B...";
+  naive_ipc::MQ client{"/B"};
   client.initialize(naive_ipc::MQ::WorkPolicy::e_consumer);
   std::cout << "OK\n";
   while (true) {
     auto received_data = client.receive();
 
     if (!received_data.empty()) {
-      std::cout << "A:";
+      std::cout << "B:";
       for (auto el : received_data) {
         std::cout << static_cast<int>(el) << ' ';
       }
