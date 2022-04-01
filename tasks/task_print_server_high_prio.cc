@@ -24,7 +24,7 @@ int main() {
   std::random_device rd;
   std::mt19937 g(rd());
 
-  constexpr size_t elements_to_send = 30;
+  constexpr size_t elements_to_send = naive_ipc::MQ::MAX_MSG_SIZE;
 
   std::vector<std::byte> v;
   v.resize(elements_to_send);
@@ -34,13 +34,11 @@ int main() {
                    [](auto el) -> std::byte { return std::byte{el}; });
 
     server_a.send_data(v);
-    std::this_thread::sleep_for(1ms);
-
     std::transform(begin(arr) + elements_to_send, begin(arr) + elements_to_send + elements_to_send,
                    begin(v),
                    [](auto el) -> std::byte { return std::byte{el}; });
 
     server_b.send_data(v);
-    std::this_thread::sleep_for(1ms);
+    std::this_thread::sleep_for(0s);
   }
 }
