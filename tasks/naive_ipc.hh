@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include <cstring>
 #include <errno.h>
 #include <fcntl.h>
 #include <mqueue.h>
@@ -30,8 +31,8 @@ public:
   void initialize(WorkPolicy wp) {
     buf_.resize(MSG_BUFFER_SIZE);
     struct mq_attr attr {
-      .mq_flags = 0, .mq_maxmsg = MAX_MESSAGES, .mq_msgsize = MAX_MSG_SIZE,
-      .mq_curmsgs = 0
+      .mq_flags = 0, .mq_maxmsg = MAX_MESSAGES,
+      .mq_msgsize = MAX_MSG_SIZE, .mq_curmsgs = 0
     };
     if (wp == WorkPolicy::e_producer) {
       if ((mq_ = mq_open(name_.c_str(), O_WRONLY | O_CREAT, QUEUE_PERMISSIONS,
@@ -54,8 +55,8 @@ public:
   void deinitialize() { mq_close(mq_); }
 
   void send_data(const std::vector<std::byte> &payload) {
-    if (mq_send(mq_, reinterpret_cast<const char*>(payload.data()), payload.size(),
-                0) == -1) {
+    if (mq_send(mq_, reinterpret_cast<const char *>(payload.data()),
+                payload.size(), 0) == -1) {
       perror("ERROR:");
       throw std::runtime_error(
           "naive_ipc::MQ: Not able to send message to client");
@@ -63,18 +64,21 @@ public:
   }
 
   std::vector<std::byte> receive() {
-    if (mq_receive(mq_, reinterpret_cast<char *>(buf_.data()), MSG_BUFFER_SIZE,
-                   NULL) == -1) {
-      perror("ERROR:");
-      throw std::runtime_error(
-          "naive_ipc::MQ: Not able to receive message to client");
+    buf_.reserve(MSG_BUFFER_SIZE);
+    int length{0};
+    if (length = mq_receive(mq_, reinterpret_cast<char *>(buf_.data()),
+                            MSG_BUFFER_SIZE, NULL) == -1) {
+      std::string e{"naive_ipc::MQ: Not able to receive message to client"};
+      e += strerror(errno);
+      throw std::runtime_error(e);
     }
+    // buf_.resize(length);
     return buf_;
   }
 
 private:
   std::string name_;
-  mqd_t mq_;             // queue descriptors
+  mqd_t mq_; // queue descriptors
 
   std::vector<std::byte> buf_;
 };
