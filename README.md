@@ -31,3 +31,8 @@ pi@raspberrypi:~/soft_rt_configuration $ sudo  bash  configure_process_scheduler
 pid 1232's current scheduling policy: SCHED_FIFO pid 1232's current scheduling priority: 99
 pid 1234's current scheduling policy: SCHED_FIFO pid 1234's current scheduling priority: 99
 pid 1236's current scheduling policy: SCHED_FIFO pid 1236's current scheduling priority: 99
+
+DISPLAY=127.0.0.1:0.0 ssh -v -Y pi@raspberrypi
+kernelshark
+
+sudo trace-cmd record -p function -P 11881 -P 11883 -P 11885

@@ -13,7 +13,9 @@ client_b_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_client_b | tr -
 IDLE_pid=0
 
 echo "Execute tracing"
-trace-cmd record  -P 11881 -P 11883 -P 11885 -P 0 -e sched:sched_wakeup -e sched:sched_switch &
+trace-cmd record  \
+    -P $server_task_pid -P $client_a_task_pid -P $client_b_task_pid -P $IDLE_pid \
+    -e sched:sched_wakeup -e sched:sched_switch &
 tracer_pid=$!
 
 time_to_record=5
@@ -25,4 +27,5 @@ kill -$SIGINT $tracer_pid
 echo "Waits for a while to collect"
 sleep 5 # wait for a while to collect traces
 
-trace-cmd report -t --ts-diff --cpu 3
+output_directory="~/soft_rt_configuration_logs/$(date +%s)"
+trace-cmd report -t --ts-diff --cpu 3 > output_directory
