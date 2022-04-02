@@ -9,7 +9,7 @@ IDLE_pid=0
 trace-cmd record  -P 11881 -P 11883 -P 11885 -P 0 -e sched:sched_wakeup -e sched:sched_switch &
 tracer_pid=$!
 
-sleep(5) # wait for a while to record traces
+sleep 5 # wait for a while to record traces
 
 SIGINT=2
 kill -$SIGINT $tracer_pid
