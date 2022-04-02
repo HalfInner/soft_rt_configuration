@@ -27,7 +27,8 @@ kill -$SIGINT $tracer_pid
 echo "Waits for a while to collect"
 sleep 5 # wait for a while to collect traces
 
-output_directory="~/soft_rt_configuration_logs/$(date +%s)"
+
+output_directory="soft_rt_configuration_logs/$(date +%s)"
 mkdir -p $output_directory
 trace-cmd report -t --ts-diff --cpu 3 > $output_directory/trace_report.txt
 echo "Logs are under location: $output_directory"
