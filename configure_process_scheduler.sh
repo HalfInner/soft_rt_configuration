@@ -20,9 +20,9 @@ elif [[ "$option" == "configure" ]]; then
     user_who=$(whoami)
     if [[ "$user_who" == "root" ]]; then 
         config='-f'
-        echo $(chrt $config -p 100 $server_task_pid)
-        echo $(chrt $config -p 100 $client_a_task_pid)
-        echo $(chrt $config -p 100 $client_b_task_pid)
+        echo $(chrt $config -p 99 $server_task_pid)
+        echo $(chrt $config -p 99 $client_a_task_pid)
+        echo $(chrt $config -p 99 $client_b_task_pid)
     else
         echo "Script has to be executed by the 'root' but was by '$user_who'"
     fi 
