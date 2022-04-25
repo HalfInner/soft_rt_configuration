@@ -3,7 +3,7 @@
 
 function usage() {
     echo "Usage:"
-    echo "      $0 <test|configure> <dir>"
+    echo "      $0 <test|configure>"
 }
 
 if [[ "$#" -eq 0 ]]; then
@@ -13,14 +13,12 @@ if [[ "$#" -eq 0 ]]; then
 fi
 
 option=$1
-dir=$2
+program=$2
 defualt_isolated_cpu=3
 if [[ "$option" == "test" ]]; then
     echo "Not Implemented"
 elif [[ "$option" == "configure" ]]; then
-    taskset -c $defualt_isolated_cpu ./$dir/task_server.a
-    taskset -c $defualt_isolated_cpu ./$dir/task_client_a.a
-    taskset -c $defualt_isolated_cpu ./$dir/task_client_b.a
+    
 else 
     usage
 fi
