@@ -41,4 +41,5 @@ sudo trace-cmd record -p function -P 11881 -P 11883 -P 11885
 1. bash configure_irq_affinity.sh configure
 1. bash configure_isolating_cpu.sh configure
 1. bash tasks/build.sh
-1. bash configure_process_affinity test
+1. run out
+1. bash configure_process_affinity.sh test
