@@ -1,4 +1,4 @@
-#! /bin/sh 
+#! /usr/bin/bash 
 # For more info: man trace-cmd
 
 user_who=$(whoami)

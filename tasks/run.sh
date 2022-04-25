@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /usr/bin/bash
 BIN_DIR=$1
 ./$BIN_DIR/task_server.a &
 sleep 1

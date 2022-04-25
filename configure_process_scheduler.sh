@@ -1,4 +1,4 @@
-#! /bin/sh 
+#! /usr/bin/bash 
 # For more info: https://man7.org/linux/man-pages/man1/chrt.1.html
 
 
