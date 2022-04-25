@@ -36,3 +36,9 @@ DISPLAY=127.0.0.1:0.0 ssh -v -Y pi@raspberrypi
 kernelshark
 
 sudo trace-cmd record -p function -P 11881 -P 11883 -P 11885
+
+# Step by step
+1. bash configure_irq_affinity.sh configure
+1. bash configure_isolating_cpu.sh configure
+1. bash tasks/build.sh
+1. bash configure_process_affinity test
