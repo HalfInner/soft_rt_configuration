@@ -18,11 +18,11 @@ defualt_isolated_cpu=3
 if [[ "$option" == "test" ]]; then
     echo "Not Implemented"
 elif [[ "$option" == "configure" ]]; then
-    taskset -c $defualt_isolated_cpu ./$dir/task_server.a
+    taskset -c $defualt_isolated_cpu ./$dir/task_server.a &
     sleep 1
-    taskset -c $defualt_isolated_cpu ./$dir/task_client_a.a
+    taskset -c $defualt_isolated_cpu ./$dir/task_client_a.a &
     sleep 1
-    taskset -c $defualt_isolated_cpu ./$dir/task_client_b.a
+    taskset -c $defualt_isolated_cpu ./$dir/task_client_b.a &
 else 
     usage
 fi
