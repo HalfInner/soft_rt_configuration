@@ -1,5 +1,5 @@
 #! /usr/bin/python3
-from distutils.command.build_scripts import first_line_re
+import matplotlib.pyplot as plt
 import sys
 
 def conv_trace_result_from_file(file : str):
@@ -32,11 +32,13 @@ def conv_trace_result_from_file(file : str):
             timestamp_per_process[process] = curr_timestamps
             
     return timestamp_per_process
-            
+
 def main(argv):
     data = conv_trace_result_from_file(argv[1])
     for key, val in data.items():
+        plt.plot(val)
         print(key, val)
+    plt.show()
     
 if __name__ == "__main__":
     main(sys.argv)
