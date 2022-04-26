@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /usr/bin/bash
 
 SCRIPT_PATH=$(dirname "$0")
 FLAGS='-Wall -Werror -Wpedantic -O3'

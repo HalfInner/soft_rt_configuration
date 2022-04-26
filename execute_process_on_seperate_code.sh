@@ -1,4 +1,4 @@
-#! /bin/sh 
+#! /usr/bin/bash
 # For more info: https://github.com/raspberrypi/linux/blob/rpi-3.2.27/Documentation/kernel-parameters.txt
 
 function usage() {
@@ -19,7 +19,9 @@ if [[ "$option" == "test" ]]; then
     echo "Not Implemented"
 elif [[ "$option" == "configure" ]]; then
     taskset -c $defualt_isolated_cpu ./$dir/task_server.a
+    sleep(1)
     taskset -c $defualt_isolated_cpu ./$dir/task_client_a.a
+    sleep(1)
     taskset -c $defualt_isolated_cpu ./$dir/task_client_b.a
 else 
     usage
