@@ -15,8 +15,7 @@ IDLE_pid=0
 echo "Execute tracing"
 trace-cmd record  \
     -P $server_task_pid -P $client_a_task_pid -P $client_b_task_pid -P $IDLE_pid \
-    -e sched &
-    # -e sched:sched_wakeup -e sched:sched_switch &
+    -e sched:sched_wakeup -e sched:sched_switch &
 tracer_pid=$!
 
 time_to_record=5
