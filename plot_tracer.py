@@ -85,7 +85,6 @@ def conv_trace_result_from_file(file: str):
 
 
 def plot_set(process_charts, min_timestamp, max_timestamp):
-
     _, axis = plt.subplots(nrows=len(process_charts), sharex='all')
     for idx, chart in enumerate(process_charts):
         axis[idx].plot(chart.get_axis_x(), chart.get_axis_y())
