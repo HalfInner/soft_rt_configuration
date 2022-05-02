@@ -26,16 +26,13 @@ class ProcessChart:
         return self.__process_name
 
     def __activate(self, to_zero: bool, timestamp: float):
-        epsilon = .000000001
+        epsilon = .0000000000000001
+        epsilon = 0.0
         self.__axis_y.append(self.__axis_y[-1])
         self.__axis_x.append(timestamp - epsilon)
-        if self.__process_name == "<idle>-0":
-            print(timestamp, self.__axis_x[-1])
 
         self.__axis_y.append(int(not to_zero))
         self.__axis_x.append(timestamp)
-        if self.__process_name == "<idle>-0":
-            print(timestamp, self.__axis_x[-1])
 
 
 def conv_trace_result_from_file(file: str):
@@ -64,16 +61,20 @@ def conv_trace_result_from_file(file: str):
                 event = data[event_id-1]
 
             if event == "sched_wakeup:":
-                curr_process = processes[process] if process in processes else ProcessChart(process)
+                curr_process = processes[process] if process in processes else ProcessChart(
+                    process)
                 curr_process.turn_on(timestamp)
                 for process_ in processes.values():
                     if process_.get_name() != curr_process.get_name():
                         process_.turn_off(timestamp)
                 processes[process] = curr_process
 
-            if event == "sched_switch:" and process == "<idle>":
+            if event == "sched_switch:":  # and process == "<idle>":
                 next_task = data[-2].split(':')[0]
-                curr_process = processes[next_task] if next_task in processes else ProcessChart(next_task)
+                if "task_" not in next_task:
+                    next_task = "<idle>"  # to fix when many processes
+                curr_process = processes[next_task] if next_task in processes else ProcessChart(
+                    next_task)
                 curr_process.turn_on(timestamp)
                 for process_ in processes.values():
                     if process_.get_name() != curr_process.get_name():
@@ -82,19 +83,21 @@ def conv_trace_result_from_file(file: str):
 
     return processes.values(), min_timestamp, max_timestamp
 
+
 def plot_set(process_charts, min_timestamp, max_timestamp):
-    fig, axis = plt.subplots(nrows=len(process_charts), sharex='all')
+
+    _, axis = plt.subplots(nrows=len(process_charts), sharex='all')
     for idx, chart in enumerate(process_charts):
         axis[idx].plot(chart.get_axis_x(), chart.get_axis_y())
         axis[idx].set_title(chart.get_name())
-        print(chart.get_name(), '\n', chart.get_axis_x(),
-              '\n', chart.get_axis_y())
         axis[idx].set_xlim([min_timestamp, max_timestamp])
+        # axis[idx].set_xlim([min_timestamp, min_timestamp+1 ])
     plt.show()
 
 
 def main(argv):
-    processes, min_timestamp, max_timestamp = conv_trace_result_from_file(argv[1])
+    processes, min_timestamp, max_timestamp = conv_trace_result_from_file(
+        argv[1])
     plot_set(processes, min_timestamp, max_timestamp)
 
 
