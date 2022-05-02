@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+import math
 import matplotlib.pyplot as plt
 import sys
 
@@ -8,6 +9,8 @@ def conv_trace_result_from_file(file: str):
     process_idx = 0
     timestamp_id = 2
     event_id = 4
+    min_timestamp = 0xffffffffffffffffffffffffffffffffffff
+    max_timestamp = -1
     with open(file) as f:
         first_line = True
         second_line = False
@@ -29,17 +32,20 @@ def conv_trace_result_from_file(file: str):
             curr_timestamps = []
             if process in timestamp_per_process:
                 curr_timestamps = timestamp_per_process[process]
-            curr_timestamps.append(float(timestamp.replace(':', '')))
+            timestamp = float(timestamp.replace(':', ''))
+            curr_timestamps.append(timestamp)
+            min_timestamp = min(timestamp, min_timestamp)
+            max_timestamp = max(timestamp, max_timestamp)
             timestamp_per_process[process] = curr_timestamps
 
-    return timestamp_per_process
+    return timestamp_per_process, min_timestamp, max_timestamp
 
 
 class ProcessChart:
     IDX = 0
     def __init__(self, name: str):
         self.__y_offset = ProcessChart.IDX
-        ProcessChart.IDX += 1
+        # ProcessChart.IDX += 1
         self.__process_name = name
         self.__axis_x = [0]
         self.__axis_y = [self.__y_offset]
@@ -60,19 +66,22 @@ class ProcessChart:
         return self.__process_name
 
     def __activate(self, to_zero: bool, timestamp: float):
+        epsilon = .000000001
         self.__axis_y.append(self.__axis_y[-1])
-        self.__axis_x.append(timestamp - 0.000000001)
+        self.__axis_x.append(timestamp - epsilon)
+        if self.__process_name == "<idle>-0":
+            print(timestamp, self.__axis_x[-1])
 
         self.__axis_y.append(self.__y_offset + int(not to_zero))
         self.__axis_x.append(timestamp)
-        # if self.__process_name == "task_server.a-3797":
-        #     print(self.__axis_y)
-
+        if self.__process_name == "<idle>-0":
+            print(timestamp, self.__axis_x[-1])
 
 def conv_trace_from_set_to_data_plot(data):
     process_charts = []
     process_indicies = []
-    for key in data.keys():
+    keys = list(data.keys())
+    for key in keys:
         process_charts.append(ProcessChart(key))
         process_indicies.append(0)
 
@@ -93,7 +102,6 @@ def conv_trace_from_set_to_data_plot(data):
                 if timestamp < min_float:
                     min_float = timestamp
                     min_key_idx = key_idx
-                    any_process_not_empty = True
             key_idx += 1
 
         for idx, process in enumerate(process_charts):
@@ -105,26 +113,22 @@ def conv_trace_from_set_to_data_plot(data):
     return process_charts
 
 
-def plot_set(process_charts):
-    # print(process_charts)
-    # chart = process_charts[0]
-    # legend = []
-    for chart in process_charts:    
-        plt.plot(chart.get_axis_x(), chart.get_axis_y(), label=chart.get_name())
-        # legend.append(chart.get_name())
-        plt.xlim([77176.034222199, 77178.967544244])
-        # plt.legend(chart.get_name())
+def plot_set(process_charts, min_timestamp, max_timestamp):
+    fig, axis = plt.subplots(nrows=len(process_charts))
+    for idx, chart in enumerate(process_charts):
+        axis[idx].plot(chart.get_axis_x(), chart.get_axis_y())
+        # axis[idx].
+        axis[idx].set_title(chart.get_name())
         print(chart.get_name(), '\n', chart.get_axis_x(), '\n', chart.get_axis_y())
-    # plt.legend(legend, loc='lower left')
+    plt.xlim([min_timestamp, max_timestamp])
     plt.legend()
     plt.show()
 
 
 def main(argv):
-    data = conv_trace_result_from_file(argv[1])
+    data, min_timestamp, max_timestamp = conv_trace_result_from_file(argv[1])
     process_chart = conv_trace_from_set_to_data_plot(data)
-    # print(data)
-    plot_set(process_chart)
+    plot_set(process_chart, min_timestamp, max_timestamp)
 
 
 if __name__ == "__main__":
