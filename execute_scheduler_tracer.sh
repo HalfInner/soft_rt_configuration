@@ -20,7 +20,7 @@ fi
 
 echo "Execute tracing"
 trace-cmd record  \
-    -e sched:sched_wakeup -e sched:sched_switch "$args" &
+    -e sched:sched_wakeup -e sched:sched_switch $args &
 tracer_pid=$!
 
 time_to_record=5
