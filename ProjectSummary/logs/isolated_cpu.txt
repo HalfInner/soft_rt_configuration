@@ -1,0 +1,60 @@
+cpus=4
+          <idle>-0     [003] 1297389.770739786:          sched_waking:         comm=task_client_b.a pid=3802 prio=0 target_cpu=003
+          <idle>-0     [003] 1297389.770744323: (+4537)  sched_wakeup:         task_client_b.a:3802 [0]<CANT FIND FIELD success> CPU:003
+          <idle>-0     [003] 1297389.770750860: (+6537)  sched_switch:         swapper/3:0 [120] R ==> task_client_b.a:3802 [0]
+ task_client_b.a-3802  [003] 1297389.770767860: (+17000) sched_waking:         comm=task_server.a pid=3797 prio=0 target_cpu=003
+ task_client_b.a-3802  [003] 1297389.770770064: (+2204)  sched_wakeup:         task_server.a:3797 [0]<CANT FIND FIELD success> CPU:003
+ task_client_b.a-3802  [003] 1297389.770803304: (+33240) sched_switch:         task_client_b.a:3802 [0] S ==> task_server.a:3797 [0]
+   task_server.a-3797  [003] 1297389.891265859: (+120462555) sched_waking:         comm=task_client_a.a pid=3800 prio=0 target_cpu=003
+   task_server.a-3797  [003] 1297389.891280248: (+14389) sched_wakeup:         task_client_a.a:3800 [0]<CANT FIND FIELD success> CPU:003
+   task_server.a-3797  [003] 1297389.891298267: (+18019) sched_switch:         task_server.a:3797 [0] S ==> task_client_a.a:3800 [0]
+ task_client_a.a-3800  [003] 1297389.891371026: (+72759) sched_switch:         task_client_a.a:3800 [0] S ==> swapper/3:0 [120]
+          <idle>-0     [003] 1297389.892374508: (+1003482) sched_waking:         comm=task_client_a.a pid=3800 prio=0 target_cpu=003
+          <idle>-0     [003] 1297389.892377248: (+2740)  sched_wakeup:         task_client_a.a:3800 [0]<CANT FIND FIELD success> CPU:003
+          <idle>-0     [003] 1297389.892390785: (+13537) sched_switch:         swapper/3:0 [120] R ==> task_client_a.a:3800 [0]
+ task_client_a.a-3800  [003] 1297389.892404711: (+13926) sched_switch:         task_client_a.a:3800 [0] S ==> swapper/3:0 [120]
+          <idle>-0     [003] 1297390.770860449: (+878455738) sched_waking:         comm=task_client_b.a pid=3802 prio=0 target_cpu=003
+          <idle>-0     [003] 1297390.770864597: (+4148)  sched_wakeup:         task_client_b.a:3802 [0]<CANT FIND FIELD success> CPU:003
+          <idle>-0     [003] 1297390.770868578: (+3981)  sched_waking:         comm=kworker/3:1 pid=37 prio=120 target_cpu=003
+          <idle>-0     [003] 1297390.770872004: (+3426)  sched_wakeup:         kworker/3:1:37 [120]<CANT FIND FIELD success> CPU:003
+          <idle>-0     [003] 1297390.770876726: (+4722)  sched_switch:         swapper/3:0 [120] R ==> task_client_b.a:3802 [0]
+ task_client_b.a-3802  [003] 1297390.770891412: (+14686) sched_waking:         comm=task_server.a pid=3797 prio=0 target_cpu=003
+ task_client_b.a-3802  [003] 1297390.770893615: (+2203)  sched_wakeup:         task_server.a:3797 [0]<CANT FIND FIELD success> CPU:003
+ task_client_b.a-3802  [003] 1297390.770918856: (+25241) sched_switch:         task_client_b.a:3802 [0] S ==> task_server.a:3797 [0]
+   task_server.a-3797  [003] 1297390.890908967: (+119990111) sched_waking:         comm=task_client_a.a pid=3800 prio=0 target_cpu=003
+   task_server.a-3797  [003] 1297390.890923467: (+14500) sched_wakeup:         task_client_a.a:3800 [0]<CANT FIND FIELD success> CPU:003
+   task_server.a-3797  [003] 1297390.890941430: (+17963) sched_switch:         task_server.a:3797 [0] S ==> task_client_a.a:3800 [0]
+ task_client_a.a-3800  [003] 1297390.891017282: (+75852) sched_switch:         task_client_a.a:3800 [0] S ==> kworker/3:1:37 [120]
+     kworker/3:1-37    [003] 1297390.891117707: (+100425) sched_switch:         kworker/3:1:37 [120] D ==> swapper/3:0 [120]
+          <idle>-0     [003] 1297390.892010152: (+892445) sched_waking:         comm=task_client_a.a pid=3800 prio=0 target_cpu=003
+          <idle>-0     [003] 1297390.892013245: (+3093)  sched_wakeup:         task_client_a.a:3800 [0]<CANT FIND FIELD success> CPU:003
+          <idle>-0     [003] 1297390.892022782: (+9537)  sched_switch:         swapper/3:0 [120] R ==> task_client_a.a:3800 [0]
+ task_client_a.a-3800  [003] 1297390.892037226: (+14444) sched_switch:         task_client_a.a:3800 [0] S ==> swapper/3:0 [120]
+          <idle>-0     [003] 1297390.893522800: (+1485574) sched_switch:         swapper/3:0 [120] R ==> kworker/3:1:37 [120]
+     kworker/3:1-37    [003] 1297390.893603930: (+81130) sched_switch:         kworker/3:1:37 [120] W ==> swapper/3:0 [120]
+          <idle>-0     [003] 1297390.893616411: (+12481) sched_waking:         comm=kworker/3:1 pid=37 prio=120 target_cpu=003
+          <idle>-0     [003] 1297390.893621263: (+4852)  sched_wakeup:         kworker/3:1:37 [120]<CANT FIND FIELD success> CPU:003
+          <idle>-0     [003] 1297390.893628541: (+7278)  sched_switch:         swapper/3:0 [120] R ==> kworker/3:1:37 [120]
+     kworker/3:1-37    [003] 1297390.893645911: (+17370) sched_switch:         kworker/3:1:37 [120] W ==> swapper/3:0 [120]
+          <idle>-0     [003] 1297391.770981797: (+877335886) sched_waking:         comm=task_client_b.a pid=3802 prio=0 target_cpu=003
+          <idle>-0     [003] 1297391.770989852: (+8055)  sched_wakeup:         task_client_b.a:3802 [0]<CANT FIND FIELD success> CPU:003
+          <idle>-0     [003] 1297391.771005000: (+15148) sched_switch:         swapper/3:0 [120] R ==> task_client_b.a:3802 [0]
+ task_client_b.a-3802  [003] 1297391.771040074: (+35074) sched_waking:         comm=task_server.a pid=3797 prio=0 target_cpu=003
+ task_client_b.a-3802  [003] 1297391.771045852: (+5778)  sched_wakeup:         task_server.a:3797 [0]<CANT FIND FIELD success> CPU:003
+ task_client_b.a-3802  [003] 1297391.771122037: (+76185) sched_switch:         task_client_b.a:3802 [0] S ==> task_server.a:3797 [0]
+   task_server.a-3797  [003] 1297391.966026889: (+194904852) sched_waking:         comm=task_client_a.a pid=3800 prio=0 target_cpu=003
+   task_server.a-3797  [003] 1297391.966046703: (+19814) sched_wakeup:         task_client_a.a:3800 [0]<CANT FIND FIELD success> CPU:003
+   task_server.a-3797  [003] 1297391.966059648: (+12945) sched_waking:         comm=kworker/3:1 pid=37 prio=120 target_cpu=003
+   task_server.a-3797  [003] 1297391.966071870: (+12222) sched_wakeup:         kworker/3:1:37 [120]<CANT FIND FIELD success> CPU:003
+   task_server.a-3797  [003] 1297391.966099129: (+27259) sched_switch:         task_server.a:3797 [0] S ==> task_client_a.a:3800 [0]
+ task_client_a.a-3800  [003] 1297391.966192481: (+93352) sched_switch:         task_client_a.a:3800 [0] S ==> kworker/3:1:37 [120]
+     kworker/3:1-37    [003] 1297391.966302981: (+110500) sched_switch:         kworker/3:1:37 [120] D ==> swapper/3:0 [120]
+          <idle>-0     [003] 1297391.967180814: (+877833) sched_waking:         comm=task_client_a.a pid=3800 prio=0 target_cpu=003
+          <idle>-0     [003] 1297391.967185111: (+4297)  sched_wakeup:         task_client_a.a:3800 [0]<CANT FIND FIELD success> CPU:003
+          <idle>-0     [003] 1297391.967196796: (+11685) sched_switch:         swapper/3:0 [120] R ==> task_client_a.a:3800 [0]
+ task_client_a.a-3800  [003] 1297391.967216092: (+19296) sched_switch:         task_client_a.a:3800 [0] S ==> swapper/3:0 [120]
+          <idle>-0     [003] 1297391.969252185: (+2036093) sched_switch:         swapper/3:0 [120] R ==> kworker/3:1:37 [120]
+     kworker/3:1-37    [003] 1297391.969278666: (+26481) sched_switch:         kworker/3:1:37 [120] R ==> swapper/3:0 [120]
+          <idle>-0     [003] 1297391.969284037: (+5371)  sched_wakeup:         kworker/3:1:37 [120]<CANT FIND FIELD success> CPU:003
+          <idle>-0     [003] 1297391.969286814: (+2777)  sched_switch:         swapper/3:0 [120] R ==> kworker/3:1:37 [120]
+     kworker/3:1-37    [003] 1297391.969302666: (+15852) sched_switch:         kworker/3:1:37 [120] W ==> swapper/3:0 [120]
