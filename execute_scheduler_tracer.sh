@@ -34,7 +34,10 @@ echo "Waits for a while to collect"
 sleep 5 # wait for a while to collect traces
 
 
-output_directory="soft_rt_configuration_logs/$(date +%s)"
+output_directory="soft_rt_configuration_logs/$(date +%d_%m_%y__%H_%M_%S)"
 mkdir -p $output_directory
 trace-cmd report -t --ts-diff --cpu 3 > $output_directory/trace_report.txt
+
+chown pi $output_directory
+chown pi $output_directory/trace_report.txt
 echo "Logs are under location: $output_directory"
