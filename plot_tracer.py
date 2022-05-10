@@ -71,8 +71,10 @@ def conv_trace_result_from_file(file: str):
 
             if event == "sched_switch:":  # and process == "<idle>":
                 next_task = data[-2].split(':')[0]
-                if "task_" not in next_task:
-                    next_task = "<idle>"  # to fix when many processes
+                if next_task.split('/')[0] == "swapper":
+                    next_task = "<idle>"
+                if next_task != "<idle>" and "task_" not in next_task:
+                    next_task = "other"
                 curr_process = processes[next_task] if next_task in processes else ProcessChart(
                     next_task)
                 curr_process.turn_on(timestamp)
@@ -84,20 +86,26 @@ def conv_trace_result_from_file(file: str):
     return processes.values(), min_timestamp, max_timestamp
 
 
-def plot_set(process_charts, min_timestamp, max_timestamp):
+def plot_set(process_charts, min_timestamp, max_timestamp, store_filename):
     _, axis = plt.subplots(nrows=len(process_charts), sharex='all')
     for idx, chart in enumerate(process_charts):
         axis[idx].plot(chart.get_axis_x(), chart.get_axis_y())
         axis[idx].set_title(chart.get_name())
         axis[idx].set_xlim([min_timestamp, max_timestamp])
         # axis[idx].set_xlim([min_timestamp, min_timestamp+1 ])
-    plt.show()
+    if store_filename:
+        plt.savefig(store_filename)
+    else:
+        plt.show()
 
 
 def main(argv):
     processes, min_timestamp, max_timestamp = conv_trace_result_from_file(
         argv[1])
-    plot_set(processes, min_timestamp, max_timestamp)
+    store_filename=None
+    if (len(argv) > 2):
+        store_filename = argv[2]
+    plot_set(processes, min_timestamp, max_timestamp, store_filename)
 
 
 if __name__ == "__main__":
