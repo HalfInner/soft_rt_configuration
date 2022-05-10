@@ -36,8 +36,12 @@ sleep 5 # wait for a while to collect traces
 
 output_directory="soft_rt_configuration_logs/$(date +%d_%m_%y__%H_%M_%S)"
 mkdir -p $output_directory
-trace-cmd report -t --ts-diff --cpu 3 > $output_directory/trace_report.txt
+trace-cmd report -t --ts-diff --cpu 3 > $output_directory/trace_report_cpu3.txt
+trace-cmd report -t --ts-diff --cpu 2 > $output_directory/trace_report_cpu2.txt
+trace-cmd report -t --ts-diff --cpu 1 > $output_directory/trace_report_cpu1.txt
+trace-cmd report -t --ts-diff --cpu 0 > $output_directory/trace_report_cpu0.txt
+trace-cmd report -t --ts-diff > $output_directory/trace_report_full.txt
 
 chown pi $output_directory
-chown pi $output_directory/trace_report.txt
+chown pi $output_directory/trace_report*.txt
 echo "Logs are under location: $output_directory"

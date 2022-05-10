@@ -27,14 +27,13 @@ W celu usprawnienia współpracy wybraliśmy parę narzędzi
 Przykładowy Screen z rozpisaniem zadań pod projekt
 [!Przykład](res/trello.png)
 
-
 ## Systemy Real Time
 
 ### Analiza porównawcza systemu Hard i Soft
 ### Analiza porównawcza systemu użytkowego i Soft
 
 ## Weryfikacja Systemu Soft Real Time
-
+Swapper nie pracuje
 ### Aplikacja
 
 ### Skrypty

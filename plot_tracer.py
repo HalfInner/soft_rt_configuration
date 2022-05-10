@@ -39,26 +39,28 @@ def conv_trace_result_from_file(file: str):
     processes = {}
     process_idx = 0
     timestamp_id = 2
-    event_id = 4
+    event_id = -7 #4
     min_timestamp = 0xffffffffffffffffffffffffffffffffffff
     max_timestamp = -1
+    
+    headers_to_skip = {
+        "CPU 0 is empty",
+        "CPU 1 is empty",
+        "CPU 2 is empty",
+        "CPU 3 is empty",
+        "cpus=4"
+    }
     with open(file) as f:
-        first_line = True
-        second_line = False
+        second_line = True
         for line in f:
-            if first_line:
-                first_line = False
-                second_line = True
+            if line.strip() in headers_to_skip:
                 continue
             data = line.split()
             process = data[process_idx].split('-')[0]
             timestamp = float(data[timestamp_id].replace(':', ''))
             min_timestamp = min(timestamp, min_timestamp)
             max_timestamp = max(timestamp, max_timestamp)
-            event = event = data[event_id]
-            if second_line:
-                second_line = False
-                event = data[event_id-1]
+            event = data[event_id]
 
             if event == "sched_wakeup:":
                 curr_process = processes[process] if process in processes else ProcessChart(
