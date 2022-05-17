@@ -29,7 +29,7 @@ fi
 
 stress_pid=
 if [[ "$include_stress" -eq "true" ]]; then
-    stress -c 4 -t 10 &
+    stress -c 4 &
     stress_pid=$!
 fi
 
