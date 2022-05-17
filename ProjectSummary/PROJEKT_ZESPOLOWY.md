@@ -33,7 +33,14 @@ Przykładowy Screen z rozpisaniem zadań pod projekt
 ### Analiza porównawcza systemu użytkowego i Soft
 
 ## Weryfikacja Systemu Soft Real Time
-Swapper nie pracuje
+
+Weryfikacja:
+* Izolacja CPU  
+  ![isolated_cpu](logs/isolated_cpu.png "isolated_cpu")
+* Izolacja CPU z dodatkowym obciążeniem systemu  
+  ![isolated_cpu_stress](logs/isolated_cpu_stress.png "isolated_cpu_stress")
+* Izolacja CPU z dodatkowym obciążeniem systemu, bez przypisania zadań do odizolowanego CPU  
+  ![isolated_cpu_stress_no_affinity](logs/isolated_cpu_stress_no_affinity.png "isolated_cpu_stress_no_affinity")
 ### Aplikacja
 
 ### Skrypty

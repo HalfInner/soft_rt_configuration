@@ -45,3 +45,38 @@ sudo trace-cmd record -p function -P 11881 -P 11883 -P 11885
 1. bash execute_process_on_seperate_code.sh out
 1. bash configure_process_scheduler.sh configure
 1. bash configure_process_affinity.sh test
+
+
+scp -r pi@raspberrypi:~/soft_rt_configuration/soft_rt_configuration_logs .
+
+
+### To work on remotely
+/etc/systemd/system/ngrok_ssh_tunneling.service
+```shki
+[Unit]
+Description=My script that requires network
+After=network.target
+
+[Service]
+Restart=always
+RestartSec=5
+User=pi
+#Type=oneshot
+ExecStart=/usr/sbin/expose_ssh_over_tcp_ngrok.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+ /usr/sbin/expose_ssh_over_tcp_ngrok.sh
+```sh
+#! /usr/bin/bash
+ngrok --log=stdout tcp 22 > /tmp/ngrok.log
+
+exit 0
+```
+```sh
+sudo systemctl daemon-reload
+sudo systemctl enable ngrok_ssh_tunneling
+```
+
+To Check logs `journalctl -r`

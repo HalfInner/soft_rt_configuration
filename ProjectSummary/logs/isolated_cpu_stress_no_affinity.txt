@@ -1,0 +1,47 @@
+CPU 0 is empty
+CPU 3 is empty
+cpus=4
+          stress-38624 [002] 1302144.144138519:          sched_wakeup:         task_client_b.a:38946 [120]<CANT FIND FIELD success> CPU:002
+          stress-38624 [002] 1302144.144149111: (+10592) sched_switch:         stress:38624 [120] R ==> task_client_b.a:38946 [120]
+ task_client_b.a-38946 [002] 1302144.144175223: (+26112) sched_wakeup:         task_server.a:38943 [120]<CANT FIND FIELD success> CPU:002
+ task_client_b.a-38946 [002] 1302144.144228148: (+52925) sched_switch:         task_client_b.a:38946 [120] S ==> task_server.a:38943 [120]
+   task_server.a-38943 [002] 1302144.161979889: (+17751741) sched_switch:         task_server.a:38943 [120] R ==> stress:38624 [120]
+          stress-38624 [002] 1302144.165977426: (+3997537) sched_switch:         stress:38624 [120] R ==> task_server.a:38943 [120]
+   task_server.a-38943 [002] 1302144.280894537: (+114917111) sched_wakeup:         task_client_a.a:38945 [120]<CANT FIND FIELD success> CPU:002
+   task_server.a-38943 [002] 1302144.280910129: (+15592) sched_switch:         task_server.a:38943 [120] R ==> task_client_a.a:38945 [120]
+ task_client_a.a-38945 [002] 1302144.281040203: (+130074) sched_switch:         task_client_a.a:38945 [120] S ==> task_server.a:38943 [120]
+   task_server.a-38943 [002] 1302144.281084685: (+44482) sched_switch:         task_server.a:38943 [120] S ==> swapper/2:0 [120]
+          <idle>-0     [002] 1302144.282077833: (+993148) sched_wakeup:         task_client_a.a:38945 [120]<CANT FIND FIELD success> CPU:002
+          <idle>-0     [002] 1302144.282087926: (+10093) sched_switch:         swapper/2:0 [120] R ==> task_client_a.a:38945 [120]
+ task_client_a.a-38945 [002] 1302144.282105111: (+17185) sched_switch:         task_client_a.a:38945 [120] S ==> swapper/2:0 [120]
+          <idle>-0     [002] 1302144.309993240: (+27888129) sched_switch:         swapper/2:0 [120] R ==> brcmf_wdog/mmc1:270 [120]
+ brcmf_wdog/mmc1-270   [002] 1302144.310015444: (+22204) sched_switch:         brcmf_wdog/mmc1:270 [120] D ==> swapper/2:0 [120]
+          <idle>-0     [002] 1302144.310024796: (+9352)  sched_wakeup:         brcmf_wdog/mmc1:270 [120]<CANT FIND FIELD success> CPU:002
+          <idle>-0     [002] 1302144.310030203: (+5407)  sched_switch:         swapper/2:0 [120] R ==> brcmf_wdog/mmc1:270 [120]
+ brcmf_wdog/mmc1-270   [002] 1302144.310040129: (+9926)  sched_switch:         brcmf_wdog/mmc1:270 [120] S ==> swapper/2:0 [120]
+          <idle>-0     [002] 1302144.337980777: (+27940648) sched_wakeup:         brcmf_wdog/mmc1:270 [120]<CANT FIND FIELD success> CPU:002
+          <idle>-0     [002] 1302144.337985907: (+5130)  sched_switch:         swapper/2:0 [120] R ==> brcmf_wdog/mmc1:270 [120]
+ brcmf_wdog/mmc1-270   [002] 1302144.337993777: (+7870)  sched_switch:         brcmf_wdog/mmc1:270 [120] S ==> swapper/2:0 [120]
+          <idle>-0     [002] 1302144.353981685: (+15987908) sched_wakeup:         brcmf_wdog/mmc1:270 [120]<CANT FIND FIELD success> CPU:002
+          <idle>-0     [002] 1302144.353995907: (+14222) sched_switch:         swapper/2:0 [120] R ==> stress:38625 [120]
+          stress-38627 [002] 1302145.144295867: (+790299960) sched_wakeup:         task_client_b.a:38946 [120]<CANT FIND FIELD success> CPU:002
+          stress-38627 [002] 1302145.144300756: (+4889)  sched_switch:         stress:38627 [120] R ==> task_client_b.a:38946 [120]
+ task_client_b.a-38946 [002] 1302145.144322089: (+21333) sched_wakeup:         task_server.a:38943 [120]<CANT FIND FIELD success> CPU:002
+ task_client_b.a-38946 [002] 1302145.144366737: (+44648) sched_switch:         task_client_b.a:38946 [120] S ==> task_server.a:38943 [120]
+   task_server.a-38943 [002] 1302145.161999570: (+17632833) sched_switch:         task_server.a:38943 [120] R ==> stress:38627 [120]
+          stress-38627 [002] 1302145.165994311: (+3994741) sched_switch:         stress:38627 [120] R ==> task_server.a:38943 [120]
+   task_server.a-38943 [002] 1302145.182010311: (+16016000) sched_switch:         task_server.a:38943 [120] R ==> stress:38627 [120]
+          stress-38627 [002] 1302145.186002663: (+3992352) sched_switch:         stress:38627 [120] R ==> task_server.a:38943 [120]
+   task_server.a-38943 [002] 1302145.194031626: (+8028963) sched_wakeup:         jbd2/mmcblk0p2-:97 [120]<CANT FIND FIELD success> CPU:002
+   task_server.a-38943 [002] 1302145.194042885: (+11259) sched_switch:         task_server.a:38943 [120] R ==> jbd2/mmcblk0p2-:97 [120]
+          stress-38627 [002] 1302145.198010941: (+3968056) sched_switch:         stress:38627 [120] R ==> task_server.a:38943 [120]
+   task_server.a-38943 [002] 1302145.202156218: (+4145277) sched_wakeup:         jbd2/mmcblk0p2-:97 [120]<CANT FIND FIELD success> CPU:002
+   task_server.a-38943 [002] 1302145.202174718: (+18500) sched_switch:         task_server.a:38943 [120] R ==> jbd2/mmcblk0p2-:97 [120]
+ jbd2/mmcblk0p2--97    [002] 1302145.202323644: (+148926) sched_switch:         jbd2/mmcblk0p2-:97 [120] D ==> task_server.a:38943 [120]
+   task_server.a-38943 [002] 1302145.204445570: (+2121926) sched_wakeup:         jbd2/mmcblk0p2-:97 [120]<CANT FIND FIELD success> CPU:002
+   task_server.a-38943 [002] 1302145.204464626: (+19056) sched_switch:         task_server.a:38943 [120] R ==> jbd2/mmcblk0p2-:97 [120]
+ jbd2/mmcblk0p2--97    [002] 1302145.204531033: (+66407) sched_switch:         jbd2/mmcblk0p2-:97 [120] S ==> task_server.a:38943 [120]
+   task_server.a-38943 [002] 1302145.222015681: (+17484648) sched_switch:         task_server.a:38943 [120] R ==> stress:38627 [120]
+          stress-38626 [001] 1302145.226054515: (+4038834) sched_switch:         stress:38626 [120] R ==> task_server.a:38943 [120]
+   task_server.a-38943 [001] 1302145.236010163: (+9955648) sched_wakeup:         sleep:39129 [120]<CANT FIND FIELD success> CPU:001
+   task_server.a-38943 [001] 1302145.242024922: (+6014759) sched_switch:         task_server.a:38943 [120] R ==> sleep:39129 [120]

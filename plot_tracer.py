@@ -57,6 +57,10 @@ def conv_trace_result_from_file(file: str):
                 continue
             data = line.split()
             process = data[process_idx].split('-')[0]
+
+            if process != "<idle>" and "task_" not in process:
+                process = "other"
+            
             timestamp = float(data[timestamp_id].replace(':', ''))
             min_timestamp = min(timestamp, min_timestamp)
             max_timestamp = max(timestamp, max_timestamp)

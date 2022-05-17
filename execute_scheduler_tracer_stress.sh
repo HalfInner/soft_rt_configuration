@@ -27,7 +27,7 @@ trace-cmd record  \
     -e sched:sched_wakeup -e sched:sched_switch &
 tracer_pid=$!
 
-time_to_record=5
+time_to_record=10
 echo "Record for $time_to_record seconds"
 sleep $time_to_record # record data for 5 seconds
 
