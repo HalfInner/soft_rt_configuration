@@ -23,12 +23,12 @@ client_b_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_client_b | tr -
 IDLE_pid=0
 
 args=
-if [[  "$only_main_processes" -eq "true" ]]; then
+if [[  "$only_main_processes" == "true" ]]; then
     args="-P $server_task_pid -P $client_a_task_pid -P $client_b_task_pid -P $IDLE_pid"
 fi
 
 stress_pid=
-if [[ "$include_stress" -eq "true" ]]; then
+if [[ "$include_stress" == "true" ]]; then
     echo "Run stress CPU"
     su pi -c "stress -c 4 -t 25 > /dev/null &"
     stress_pid=$!
