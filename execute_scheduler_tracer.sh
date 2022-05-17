@@ -63,6 +63,6 @@ trace-cmd report -t --ts-diff --cpu 1 > $output_directory/trace_report_cpu1.txt
 trace-cmd report -t --ts-diff --cpu 0 > $output_directory/trace_report_cpu0.txt
 trace-cmd report -t --ts-diff > $output_directory/trace_report_full.txt
 
-chown pi $output_directory
-chown pi -R $output_directory
+chown pi:pi $output_directory
+chown pi:pi -R $output_directory
 echo "Logs are under location: $output_directory"
