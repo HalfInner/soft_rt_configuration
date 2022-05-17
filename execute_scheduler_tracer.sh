@@ -24,6 +24,7 @@ IDLE_pid=0
 
 args=
 if [[  "$only_main_processes" == "true" ]]; then
+    echo "Limit collection to main tasks"
     args="-P $server_task_pid -P $client_a_task_pid -P $client_b_task_pid -P $IDLE_pid"
 fi
 
@@ -63,5 +64,5 @@ trace-cmd report -t --ts-diff --cpu 0 > $output_directory/trace_report_cpu0.txt
 trace-cmd report -t --ts-diff > $output_directory/trace_report_full.txt
 
 chown pi $output_directory
-chown pi $output_directory/trace_report*.txt
+chown pi -R $output_directory
 echo "Logs are under location: $output_directory"
