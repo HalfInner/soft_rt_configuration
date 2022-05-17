@@ -54,8 +54,8 @@ kill -$SIGINT $tracer_pid
 echo "Waits for a while to collect"
 sleep 5 # wait for a while to collect traces
 
-
-output_directory="soft_rt_configuration_logs/$(date +%d_%m_%y__%H_%M_%S)"
+base_log_directory="soft_rt_configuration_logs"
+output_directory="$base_log_directory/$(date +%d_%m_%y__%H_%M_%S)"
 mkdir -p $output_directory
 trace-cmd report -t --ts-diff --cpu 3 > $output_directory/trace_report_cpu3.txt
 trace-cmd report -t --ts-diff --cpu 2 > $output_directory/trace_report_cpu2.txt
@@ -63,6 +63,7 @@ trace-cmd report -t --ts-diff --cpu 1 > $output_directory/trace_report_cpu1.txt
 trace-cmd report -t --ts-diff --cpu 0 > $output_directory/trace_report_cpu0.txt
 trace-cmd report -t --ts-diff > $output_directory/trace_report_full.txt
 
+chown pi:pi $base_log_directory
 chown pi:pi $output_directory
 chown pi:pi -R $output_directory
 echo "Logs are under location: $output_directory"
