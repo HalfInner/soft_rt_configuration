@@ -1,16 +1,21 @@
 #! /usr/bin/bash 
 # For more info: man trace-cmd
 
-only_main_processes=$2
-include_stress=$3
-
 user_who=$(whoami)
 if [[ "$user_who" != "root" ]]; then 
     echo "Script has to be executed by the 'root' but was by '$user_who'"
     exit 1
 fi
 
-echo "Execute tracer with parameters '$1' '$2' '$3'"
+only_main_processes="false"
+include_stress="false"
+if [[ "$#" -ge  "1"]]; then
+    only_main_processes=$1
+fi
+if [[ "$#" -ge  "2"]]; then
+    include_stress=$2
+fi
+echo "Execute tracer with parameters only_main_processes='$1' include_stress='$2'"
 
 server_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_server | tr -s ' ' | cut -d ' ' -f 2)
 client_a_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_client_a | tr -s ' ' | cut -d ' ' -f 2)
