@@ -2,7 +2,8 @@
 
 SCRIPT_PATH=$(dirname "$0")
 FLAGS='-Wall -Werror -Wpedantic -O3'
-OUTPUT_DIR="out"
+OUTPUT_DIR=$1
+
 mkdir -p $OUTPUT_DIR
 
 printf "Building task_server... "
