@@ -10,6 +10,8 @@ if [[ "$user_who" != "root" ]]; then
     exit 1
 fi
 
+echo "Execute tracer with parameters '$1' '$2' '$3'"
+
 server_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_server | tr -s ' ' | cut -d ' ' -f 2)
 client_a_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_client_a | tr -s ' ' | cut -d ' ' -f 2)
 client_b_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_client_b | tr -s ' ' | cut -d ' ' -f 2)
@@ -21,7 +23,7 @@ if [[  "$only_main_processes" -eq "true" ]]; then
 fi
 
 stress_pid=
-if [[ "$only_main_processes" -eq "true" ]]; then
+if [[ "$include_stress" -eq "true" ]]; then
     stress -c 4 -t 10 &
     stress_pid=$!
 fi
