@@ -28,6 +28,7 @@ int main() {
       std::cout << "\n";
     } else {
     }
-    std::this_thread::sleep_for(1s);
+    // std::this_thread::sleep_for(1s);
+    std::this_thread::yield();
   }
 }

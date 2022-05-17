@@ -38,6 +38,7 @@ int main() {
                    [](auto el) -> std::byte { return std::byte{el}; });
 
     server_b.send_data(v);
-    std::this_thread::sleep_for(0s);
+    // std::this_thread::sleep_for(0s);
+    std::this_thread::yield();
   }
 }

@@ -51,7 +51,6 @@ def conv_trace_result_from_file(file: str):
         "cpus=4"
     }
     with open(file) as f:
-        second_line = True
         for line in f:
             if line.strip() in headers_to_skip:
                 continue
