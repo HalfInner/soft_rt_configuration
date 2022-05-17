@@ -2,6 +2,8 @@
 # For more info: man trace-cmd
 
 only_main_processes=$2
+include_stress=$3
+
 user_who=$(whoami)
 if [[ "$user_who" != "root" ]]; then 
     echo "Script has to be executed by the 'root' but was by '$user_who'"
@@ -18,6 +20,12 @@ if [[  "$only_main_processes" -eq "true" ]]; then
     args="-P $server_task_pid -P $client_a_task_pid -P $client_b_task_pid -P $IDLE_pid"
 fi
 
+stress_pid=
+if [[ "$only_main_processes" -eq "true" ]]; then
+    stress -c 4 -t 10 &
+    stress_pid=$!
+fi
+
 echo "Execute tracing"
 trace-cmd record  \
     -e sched:sched_wakeup -e sched:sched_switch $args &
@@ -29,6 +37,9 @@ sleep $time_to_record # record data for 5 seconds
 
 SIGINT=2
 kill -$SIGINT $tracer_pid
+if [[ "$include_stress" -eq "true" ]]; then
+    kill -$SIGINT $stress_pid
+fi
 
 echo "Waits for a while to collect"
 sleep 5 # wait for a while to collect traces

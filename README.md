@@ -48,7 +48,7 @@ sudo trace-cmd record -p function -P 11881 -P 11883 -P 11885
 
 
 scp -r pi@raspberrypi:~/soft_rt_configuration/soft_rt_configuration_logs .
-
+python plot_tracer.py soft_rt_configuration_logs/17_05_22__17_23_18/trace_report_cpu3.txt
 
 ### To work on remotely
 /etc/systemd/system/ngrok_ssh_tunneling.service
