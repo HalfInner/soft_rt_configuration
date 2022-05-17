@@ -29,7 +29,7 @@ fi
 
 stress_pid=
 if [[ "$include_stress" -eq "true" ]]; then
-    stress -c 4 &
+    stress -c 4 -t 25 &
     stress_pid=$!
 fi
 
@@ -44,9 +44,10 @@ sleep $time_to_record # record data for 5 seconds
 
 SIGINT=2
 kill -$SIGINT $tracer_pid
-if [[ "$include_stress" -eq "true" ]]; then
-    kill -$SIGINT $stress_pid
-fi
+# if [[ "$include_stress" -eq "true" ]]; then
+#     echo "Stop "
+#     kill -$SIGINT $stress_pid
+# fi
 
 echo "Waits for a while to collect"
 sleep 5 # wait for a while to collect traces
