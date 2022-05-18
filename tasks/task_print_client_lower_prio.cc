@@ -10,7 +10,6 @@
 #include <thread>
 
 #include "naive_ipc.hh"
-#include "scoped_timer.hh"
 
 using namespace std::chrono_literals;
 int main(int argc, char *argv[]) {
@@ -24,7 +23,6 @@ int main(int argc, char *argv[]) {
   std::cout << "OK\n";
   while (true) {
     {
-      // auto t = HolidayBag::SportTimer("Client " + client_name, "us");
       auto received_data_opt = client.receive();
       if (received_data_opt) {
         auto &received_data = received_data_opt.value();
@@ -34,11 +32,6 @@ int main(int argc, char *argv[]) {
             [](auto sum, auto v) { return sum + static_cast<int>(v); });
         (void)res;
       }
-      // t.stop();
-      // if (received_data_opt) {
-      //   std::cout << t.getInterSummaryBag().unknit();
-      // }
     }
-    // std::this_thread::sleep_for(100us);
   }
 }

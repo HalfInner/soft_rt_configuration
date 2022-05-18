@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
   std::cout << "Starting server...";
   size_t magic_number_to_get_1ms_load = 1000000;
   if (argc > 1) {
+    std::cout << "Load arg=" << argv[1] << "...";
     magic_number_to_get_1ms_load = std::stoll(argv[1]);
   }
   std::cout << "Use n=" << magic_number_to_get_1ms_load << " to load shuffling... ";
