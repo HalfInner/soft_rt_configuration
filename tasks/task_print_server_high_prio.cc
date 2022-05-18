@@ -41,7 +41,6 @@ int main(int argc, char *argv[]) {
   auto t_2 = HolidayBag::SportTimer("Server Sleep", "us", finish_line);
   while (true) {
     {
-      constexpr size_t magic_number_to_get_1ms_load = 1000000;
       std::shuffle(begin(arr), begin(arr) + magic_number_to_get_1ms_load, g);
       std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
                      [](auto el) -> std::byte { return std::byte{el}; });
