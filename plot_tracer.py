@@ -58,10 +58,11 @@ def conv_trace_result_from_file(file: str):
             data = line.split()
             process_name = data[process_idx].split('-')[0]
             core_id = int(data[core_id_idx][1:4])
-            process = process_name + "_" + str(core_id)
+            core_id_suffix = "_" + str(core_id)
+            process = process_name + core_id_suffix
 
-            if process != "<idle>_"  + str(core_id) and "task_" not in process:
-                process = "other_" + str(core_id)
+            if process != "<idle>" + core_id_suffix and "task_" not in process:
+                process = "other" + core_id_suffix
             
             timestamp = float(data[timestamp_id].replace(':', ''))
             min_timestamp = min(timestamp, min_timestamp)
@@ -69,24 +70,32 @@ def conv_trace_result_from_file(file: str):
             event = data[event_id]
 
             if event == "sched_wakeup:":
+                print("wakeup: process: ", process)
                 curr_process = processes[process] if process in processes else ProcessChart(
                     process)
                 curr_process.turn_on(timestamp)
                 for process_ in processes.values():
+                    if core_id_suffix not in process_.get_name():
+                        continue
                     if process_.get_name() != curr_process.get_name():
                         process_.turn_off(timestamp)
                 processes[process] = curr_process
 
             if event == "sched_switch:":  # and process == "<idle>":
-                next_task = data[-2].split(':')[0] + "_" + str(core_id)
+                next_task = data[-2].split(':')[0] + core_id_suffix
+                print("SWITCH: next task: ", next_task)
                 if next_task.split('/')[0] == "swapper":
-                    next_task = "<idle>_" + str(core_id)
-                if next_task != "<idle>_" + str(core_id) and "task_" not in next_task:
-                    next_task = "other_" + str(core_id)
+                    next_task = "<idle>" + core_id_suffix
+                    print("TO IDLE:", next_task)
+                if (next_task != "<idle>" + core_id_suffix) and "task_" not in next_task:
+                    next_task = "other" + core_id_suffix
+                    print("TO OTHER", next_task)
                 curr_process = processes[next_task] if next_task in processes else ProcessChart(
                     next_task)
                 curr_process.turn_on(timestamp)
                 for process_ in processes.values():
+                    if core_id_suffix not in process_.get_name():
+                        continue
                     if process_.get_name() != curr_process.get_name():
                         process_.turn_off(timestamp)
                 processes[next_task] = curr_process
