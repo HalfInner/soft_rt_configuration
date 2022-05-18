@@ -8,7 +8,6 @@
 #include <random>
 #include <thread>
 
-
 #include "naive_ipc.hh"
 #include "scoped_timer.hh"
 
@@ -23,6 +22,9 @@ int main() {
     auto received_data = client.receive();
 
     std::sort(begin(received_data), end(received_data));
+    auto res = std::accumulate(begin(received_data), end(received_data), 0,
+                               [](auto v) { return std::to_integer(val); });
+    (void)res;
     // if (!received_data.empty()) {
     //   std::cout << "B:";
     //   for (auto el : received_data) {
