@@ -19,7 +19,7 @@ int main() {
   client.initialize(naive_ipc::MQ::WorkPolicy::e_consumer);
   std::cout << "OK\n";
   while (true) {
-    auto t = HolidayBag::SportTimer("Client A", "us");
+    auto t = HolidayBag::SportTimer("Client B", "us");
     auto received_data = client.receive();
 
     // if (!received_data.empty()) {
