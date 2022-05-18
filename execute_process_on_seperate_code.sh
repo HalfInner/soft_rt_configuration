@@ -20,9 +20,9 @@ if [[ "$option" == "test" ]]; then
 elif [[ "$option" == "configure" ]]; then
     taskset -c $defualt_isolated_cpu ./$dir/task_server.a &
     sleep 1
-    bash -c "exec -a \"task_A\" taskset -c $defualt_isolated_cpu ./$dir/task_client.a \"A\" &"
+    taskset -c $defualt_isolated_cpu ./$dir/task_client_A.a "A" &
     sleep 1
-    bash -c "exec -a \"task_B\" taskset -c $defualt_isolated_cpu ./$dir/task_client.a \"B\" &"
+    taskset -c $defualt_isolated_cpu ./$dir/task_client_B.a "B" &
 else 
     usage
 fi
