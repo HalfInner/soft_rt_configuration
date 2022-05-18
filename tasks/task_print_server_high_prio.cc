@@ -31,7 +31,7 @@ int main() {
     {
       auto t = HolidayBag::SportTimer("Server", "us");
       std::shuffle(begin(arr), end(arr), g);
-      auto j1 = std::async(std::launch::async, [&arr, &server_a, elements_to_send]() {
+      auto j1 = std::async(std::launch::async, [&server_a, elements_to_send]() {
         std::vector<std::byte> v; 
         v.reserve(elements_to_send);
         std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
@@ -39,7 +39,7 @@ int main() {
 
         server_a.send_data(v);
       });
-      auto j2 = std::async(std::launch::async, [&arr, &server_b, elements_to_send]() {
+      auto j2 = std::async(std::launch::async, [&server_b, elements_to_send]() {
         std::vector<std::byte> v;
         v.reserve(elements_to_send);
         std::transform(begin(arr) + elements_to_send,
