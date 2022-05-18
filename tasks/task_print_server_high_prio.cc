@@ -32,14 +32,14 @@ int main() {
     {
       auto t = HolidayBag::SportTimer("Server", "us");
       std::shuffle(begin(arr), end(arr), g);
-      auto j1 = std::async(std::launch::async, [&arr]() {
+      auto j1 = std::async(std::launch::async, [&arr, &server_a]() {
         std::vector<std::byte> v; 
         std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
                        [](auto el) -> std::byte { return std::byte{el}; });
 
         server_a.send_data(v);
       });
-      auto j2 = std::async(std::launch::async, [&arr]() {
+      auto j2 = std::async(std::launch::async, [&arr, &server_b]() {
         std::vector<std::byte> v;
         std::transform(begin(arr) + elements_to_send,
                        begin(arr) + elements_to_send + elements_to_send,
