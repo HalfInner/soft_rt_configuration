@@ -21,13 +21,15 @@ int main() {
   while (true) {
     {
       auto t = HolidayBag::SportTimer("Client A", "us");
-      auto received_data = client.receive();
-
-      std::sort(begin(received_data), end(received_data));
-      auto res = std::accumulate(
-          begin(received_data), end(received_data), 0,
-          [](auto sum, auto v) { return sum + static_cast<int>(v); });
-      (void)res;
+      auto received_data_opt = client.receive();
+      if (received_data_opt) {
+        auto &received_data = received_data_opt.value();
+        std::sort(begin(received_data), end(received_data));
+        auto res = std::accumulate(
+            begin(received_data), end(received_data), 0,
+            [](auto sum, auto v) { return sum + static_cast<int>(v); });
+        (void)res;
+      }
       // if (!received_data.empty()) {
       //   std::cout << "A:";
       //   for (auto el : received_data) {

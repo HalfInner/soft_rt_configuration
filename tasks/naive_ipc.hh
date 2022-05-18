@@ -1,6 +1,7 @@
 #pragma once
 // (C) Kajetan Brzuszczak 2022
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -47,7 +48,7 @@ public:
       }
     }
     if (wp == WorkPolicy::e_consumer) {
-      if ((mq_ = mq_open(name_.c_str(), O_RDONLY, QUEUE_PERMISSIONS, &attr)) ==
+      if ((mq_ = mq_open(name_.c_str(), O_RDONLY | O_NONBLOCK, QUEUE_PERMISSIONS, &attr)) ==
           -1) {
         std::string error = "naive_ipc::MQ Not able to create mq CONSUMER:";
         perror(error.c_str());
@@ -67,9 +68,12 @@ public:
     }
   }
 
-  std::vector<std::byte> receive() {
+  std::optional<std::vector<std::byte>> receive() {
     if (mq_receive(mq_, reinterpret_cast<char *>(buf_.data()),
                             MSG_BUFFER_SIZE, NULL) == -1) {
+      if (errno == EAGAIN) {
+        return std::nullopt;
+      }
       std::string e{"naive_ipc::MQ: Not able to receive message to client"};
       e += strerror(errno);
       throw std::runtime_error(e);
