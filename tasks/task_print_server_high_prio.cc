@@ -29,18 +29,17 @@ int main() {
 
   constexpr int finish_line = 100;
   auto loops = 0;
+  std::vector<std::byte> v;
+  v.reserve(elements_to_send);
   auto t = HolidayBag::SportTimer("Server", "us", finish_line);
   while (true) {
     {
       constexpr size_t magic_number_to_get_1ms_load = 1'024;
       std::shuffle(begin(arr), begin(arr) + magic_number_to_get_1ms_load, g);
-      std::vector<std::byte> v;
-      v.reserve(elements_to_send);
       std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
                      [](auto el) -> std::byte { return std::byte{el}; });
 
       server_a.send_data(v);
-      v.reserve(elements_to_send);
       std::transform(begin(arr) + elements_to_send,
                      begin(arr) + elements_to_send + elements_to_send, begin(v),
                      [](auto el) -> std::byte { return std::byte{el}; });
