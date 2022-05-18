@@ -70,7 +70,6 @@ def conv_trace_result_from_file(file: str):
             event = data[event_id]
 
             if event == "sched_wakeup:":
-                print("wakeup: process: ", process)
                 curr_process = processes[process] if process in processes else ProcessChart(
                     process)
                 curr_process.turn_on(timestamp)
@@ -83,13 +82,10 @@ def conv_trace_result_from_file(file: str):
 
             if event == "sched_switch:":  # and process == "<idle>":
                 next_task = data[-2].split(':')[0] + core_id_suffix
-                print("SWITCH: next task: ", next_task)
                 if next_task.split('/')[0] == "swapper":
                     next_task = "<idle>" + core_id_suffix
-                    print("TO IDLE:", next_task)
                 if (next_task != "<idle>" + core_id_suffix) and "task_" not in next_task:
                     next_task = "other" + core_id_suffix
-                    print("TO OTHER", next_task)
                 curr_process = processes[next_task] if next_task in processes else ProcessChart(
                     next_task)
                 curr_process.turn_on(timestamp)

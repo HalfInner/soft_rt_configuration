@@ -9,6 +9,7 @@
 #include <thread>
 
 #include "naive_ipc.hh"
+#include "scoped_timer.hh"
 
 using namespace std::chrono_literals;
 std::array<unsigned char, 2 * 1024 * 1024> arr;
@@ -28,6 +29,7 @@ int main() {
   std::vector<std::byte> v;
   v.resize(elements_to_send);
   while (true) {
+    auto t = HolidayBag::SportTimer("Server", "us");
     std::shuffle(begin(arr), end(arr), g);
     std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
                    [](auto el) -> std::byte { return std::byte{el}; });
@@ -38,7 +40,8 @@ int main() {
                    [](auto el) -> std::byte { return std::byte{el}; });
 
     server_b.send_data(v);
+    t.stop()
     std::this_thread::sleep_for(0s);
-    // std::this_thread::yield();
+    std::cout << t.getInterSummaryBag().unknit();
   }
 }
