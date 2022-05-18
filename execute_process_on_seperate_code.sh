@@ -19,7 +19,7 @@ defualt_isolated_cpu=3
 if [[ "$option" == "test" ]]; then
     echo "Not Implemented"
 elif [[ "$option" == "configure" ]]; then
-    taskset -c $defualt_isolated_cpu ./$dir/task_server.a shuffle_load &
+    taskset -c $defualt_isolated_cpu ./$dir/task_server.a $shuffle_load &
     sleep 1
     taskset -c $defualt_isolated_cpu ./$dir/task_client_A.a "A" &
     sleep 1
