@@ -31,7 +31,7 @@ int main() {
   while (true) {
     {
       auto t1 = HolidayBag::SportTimer("Server", "us");
-      std::shuffle(begin(arr), begin(arr) + elements_to_send, g);
+      std::shuffle(begin(arr), begin(arr) + 10000, g);
       // auto j1 = std::async(std::launch::async, [&server_a, elements_to_send]() {
         std::vector<std::byte> v; 
         v.reserve(elements_to_send);
