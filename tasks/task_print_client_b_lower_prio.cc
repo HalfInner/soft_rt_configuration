@@ -30,16 +30,10 @@ int main() {
             [](auto sum, auto v) { return sum + static_cast<int>(v); });
         (void)res;
       }
-      // if (!received_data.empty()) {
-      //   std::cout << "B:";
-      //   for (auto el : received_data) {
-      //     std::cout << static_cast<int>(el) << ' ';
-      //   }
-      //   std::cout << "\n";
-      // } else {
-      // }
       t.stop();
-      std::cout << t.getInterSummaryBag().unknit();
+      if (received_data_opt) {
+        std::cout << t.getInterSummaryBag().unknit();
+      }
     }
     // std::this_thread::sleep_for(1ms);
     std::this_thread::yield();
