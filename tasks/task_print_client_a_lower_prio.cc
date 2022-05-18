@@ -8,7 +8,6 @@
 #include <random>
 #include <thread>
 
-
 #include "naive_ipc.hh"
 #include "scoped_timer.hh"
 
