@@ -48,9 +48,9 @@ int main() {
       if (++loops >= finish_line) {
         t.lap();
         loops = 0;
+        std::cout << t.getInterSummaryBag().unknit();
       }
     }
-    std::cout << t.getInterSummaryBag().unknit();
     std::this_thread::yield();
   }
 }
