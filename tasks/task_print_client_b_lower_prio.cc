@@ -35,8 +35,8 @@ int main() {
     // } else {
     // }
     t.stop();
-    std::this_thread::sleep_for(1s);
-    // std::this_thread::yield();
+    // std::this_thread::sleep_for(1ms);
+    std::this_thread::yield();
     std::cout << t.getInterSummaryBag().unknit();
   }
 }

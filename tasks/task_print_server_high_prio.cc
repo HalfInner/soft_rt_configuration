@@ -42,7 +42,8 @@ int main() {
     server_b.send_data(v);
 
     t.stop();
-    std::this_thread::sleep_for(0s);
+    // std::this_thread::sleep_for(0ms);
+    std::this_thread::yield();
     std::cout << t.getInterSummaryBag().unknit();
   }
 }
