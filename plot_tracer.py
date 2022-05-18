@@ -38,6 +38,7 @@ class ProcessChart:
 def conv_trace_result_from_file(file: str):
     processes = {}
     process_idx = 0
+    core_id_idx = 1
     timestamp_id = 2
     event_id = -7 #4
     min_timestamp = 0xffffffffffffffffffffffffffffffffffff
@@ -55,10 +56,12 @@ def conv_trace_result_from_file(file: str):
             if line.strip() in headers_to_skip:
                 continue
             data = line.split()
-            process = data[process_idx].split('-')[0]
+            process_name = data[process_idx].split('-')[0]
+            core_id = int(data[core_id_idx][1:4])
+            process = process_name + "_" + str(core_id)
 
-            if process != "<idle>" and "task_" not in process:
-                process = "other"
+            if process != "<idle>_"  + str(core_id) and "task_" not in process:
+                process = "other_" + str(core_id)
             
             timestamp = float(data[timestamp_id].replace(':', ''))
             min_timestamp = min(timestamp, min_timestamp)
@@ -75,11 +78,11 @@ def conv_trace_result_from_file(file: str):
                 processes[process] = curr_process
 
             if event == "sched_switch:":  # and process == "<idle>":
-                next_task = data[-2].split(':')[0]
+                next_task = data[-2].split(':')[0] + "_" + str(core_id)
                 if next_task.split('/')[0] == "swapper":
-                    next_task = "<idle>"
-                if next_task != "<idle>" and "task_" not in next_task:
-                    next_task = "other"
+                    next_task = "<idle>_" + str(core_id)
+                if next_task != "<idle>_" + str(core_id) and "task_" not in next_task:
+                    next_task = "other_" + str(core_id)
                 curr_process = processes[next_task] if next_task in processes else ProcessChart(
                     next_task)
                 curr_process.turn_on(timestamp)
@@ -92,14 +95,14 @@ def conv_trace_result_from_file(file: str):
 
 
 def plot_set(process_charts, min_timestamp, max_timestamp, store_filename):
+    process_charts = sorted(process_charts, key=lambda chart: chart.get_name())
     _, axis = plt.subplots(nrows=len(process_charts), sharex='all')
     for idx, chart in enumerate(process_charts):
         axis[idx].plot(chart.get_axis_x(), chart.get_axis_y())
         axis[idx].set_title(chart.get_name())
         axis[idx].set_xlim([min_timestamp, max_timestamp])
-        # axis[idx].set_xlim([min_timestamp, min_timestamp+1 ])
     if store_filename:
-        plt.savefig(store_filename)
+        plt.savefig(store_filename, dpi=600.)
     else:
         plt.show()
 
