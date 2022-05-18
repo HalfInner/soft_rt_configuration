@@ -31,15 +31,15 @@ int main() {
     {
       auto t = HolidayBag::SportTimer("Server", "us");
       // std::shuffle(begin(arr), end(arr), g);
-      auto j1 = std::async(std::launch::async, [&server_a, elements_to_send]() {
+      // auto j1 = std::async(std::launch::async, [&server_a, elements_to_send]() {
         std::vector<std::byte> v; 
         v.reserve(elements_to_send);
         std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
                        [](auto el) -> std::byte { return std::byte{el}; });
 
         server_a.send_data(v);
-      });
-      auto j2 = std::async(std::launch::async, [&server_b, elements_to_send]() {
+      // });
+      // auto j2 = std::async(std::launch::async, [&server_b, elements_to_send]() {
         std::vector<std::byte> v;
         v.reserve(elements_to_send);
         std::transform(begin(arr) + elements_to_send,
@@ -48,9 +48,9 @@ int main() {
                        [](auto el) -> std::byte { return std::byte{el}; });
 
         server_b.send_data(v);
-      });
-      j1.get();
-      j2.get();
+      // });
+      // j1.get();
+      // j2.get();
       t.stop();
       // std::this_thread::sleep_for(0ms);
       std::cout << t.getInterSummaryBag().unknit();
