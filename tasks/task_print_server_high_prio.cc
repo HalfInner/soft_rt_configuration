@@ -14,8 +14,13 @@
 
 using namespace std::chrono_literals;
 std::array<unsigned char, 2 * 1024 * 1024> arr;
-int main() {
+int main(int argc, char *argv[]) {
   std::cout << "Starting server...";
+  size_t magic_number_to_get_1ms_load = 1000000;
+  if (argc > 1) {
+    magic_number_to_get_1ms_load = std::stoll(argv[1]);
+  }
+  std::cout << "Use n=" << magic_number_to_get_1ms_load << " to load shuffling... ";
   naive_ipc::MQ server_a{"/A"}, server_b{"/B"};
   server_a.initialize(naive_ipc::MQ::WorkPolicy::e_producer);
   server_b.initialize(naive_ipc::MQ::WorkPolicy::e_producer);
