@@ -24,7 +24,7 @@ int main() {
 
     std::sort(begin(received_data), end(received_data));
     auto res = std::accumulate(begin(received_data), end(received_data), 0,
-                               [](auto v) { return std::to_integer<int>(val); });
+                               [](auto v) { return std::to_integer<int>(v); });
     (void)res;
     // if (!received_data.empty()) {
     //   std::cout << "B:";
