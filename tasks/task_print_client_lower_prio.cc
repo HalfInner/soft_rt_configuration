@@ -13,7 +13,7 @@
 #include "scoped_timer.hh"
 
 using namespace std::chrono_literals;
-int main(int argc, int argv[]) {
+int main(int argc, char *argv[]) {
   std::string client_name = "DEAFULT";
   if (argc > 1) {
     client_name = argv[1];
