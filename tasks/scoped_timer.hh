@@ -49,7 +49,7 @@ template <typename Unit = std::chrono::microseconds> class SportTimer {
   bool _isStopped;
   bool _is_paused;
 
-  size_t _durations_sum = 0;
+  int64_t _durations_sum = 0;
   int _durations_number = 0;
 
 #if _WIN32
