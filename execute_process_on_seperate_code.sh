@@ -3,7 +3,7 @@
 
 function usage() {
     echo "Usage:"
-    echo "      $0 <test|configure> <dir>"
+    echo "      $0 <test|configure> <dir> <shuffle_load>"
 }
 
 if [[ "$#" -eq 0 ]]; then
@@ -14,11 +14,12 @@ fi
 
 option=$1
 dir=$2
+shuffle_load=$3
 defualt_isolated_cpu=3
 if [[ "$option" == "test" ]]; then
     echo "Not Implemented"
 elif [[ "$option" == "configure" ]]; then
-    taskset -c $defualt_isolated_cpu ./$dir/task_server.a &
+    taskset -c $defualt_isolated_cpu ./$dir/task_server.a shuffle_load &
     sleep 1
     taskset -c $defualt_isolated_cpu ./$dir/task_client_A.a "A" &
     sleep 1
