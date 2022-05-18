@@ -79,4 +79,38 @@ sudo systemctl daemon-reload
 sudo systemctl enable ngrok_ssh_tunneling
 ```
 
+```txt
+For Yield 
+  Job [Server] takes: 28us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 27us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 26us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 26us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 27us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 26us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 27us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 28us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 27us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 25us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 27us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 27us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 28us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 26us
+  Job [Server Sleep] takes: 0us
+  Job [Server] takes: 26us
+  Job [Server Sleep] takes: 0us
+```
+n=10000 => 24us
 To Check logs `journalctl -r`
