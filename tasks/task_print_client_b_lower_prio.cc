@@ -20,7 +20,7 @@ int main() {
   std::cout << "OK\n";
   while (true) {
     {
-      auto t = HolidayBag::SportTimer("Client B", "us");
+      // auto t = HolidayBag::SportTimer("Client B", "us");
       auto received_data_opt = client.receive();
       if (received_data_opt) {
         auto &received_data = received_data_opt.value();
@@ -31,9 +31,9 @@ int main() {
         (void)res;
       }
       t.stop();
-      if (received_data_opt) {
-        std::cout << t.getInterSummaryBag().unknit();
-      }
+      // if (received_data_opt) {
+      //   std::cout << t.getInterSummaryBag().unknit();
+      // }
     }
     // std::this_thread::sleep_for(1ms);
     std::this_thread::yield();
