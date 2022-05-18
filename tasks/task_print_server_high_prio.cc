@@ -32,7 +32,8 @@ int main() {
   auto t = HolidayBag::SportTimer("Server", "us", finish_line);
   while (true) {
     {
-      std::shuffle(begin(arr), begin(arr) + 10000, g);
+      constexpr size_t magic_number_to_get_1ms_load = 8000;
+      std::shuffle(begin(arr), begin(arr) + magic_number_to_get_1ms_load, g);
       std::vector<std::byte> v;
       v.reserve(elements_to_send);
       std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
