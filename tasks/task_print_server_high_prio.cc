@@ -32,6 +32,7 @@ int main() {
   std::vector<std::byte> v;
   v.reserve(elements_to_send);
   auto t = HolidayBag::SportTimer("Server", "us", finish_line);
+  auto t_2 = HolidayBag::SportTimer("Server Sleep", "us", finish_line);
   while (true) {
     {
       constexpr size_t magic_number_to_get_1ms_load = 1000000;
@@ -47,7 +48,9 @@ int main() {
       server_b.send_data(v);
     }
     t.mini_lap();
+    t_2.mini_lap(true);
     std::this_thread::yield();
+    t_2.mini_lap(false);
     t.mini_lap(true);
     if (++loops >= finish_line) {
       loops = 0;
