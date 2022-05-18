@@ -27,20 +27,21 @@ int main() {
 
   constexpr size_t elements_to_send = naive_ipc::MQ::MAX_MSG_SIZE;
 
-  v.resize(elements_to_send);
   while (true) {
     {
       auto t = HolidayBag::SportTimer("Server", "us");
       std::shuffle(begin(arr), end(arr), g);
-      auto j1 = std::async(std::launch::async, [&arr, &server_a]() {
+      auto j1 = std::async(std::launch::async, [&arr, &server_a, elements_to_send]() {
         std::vector<std::byte> v; 
+        v.reserve(elements_to_send);
         std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
                        [](auto el) -> std::byte { return std::byte{el}; });
 
         server_a.send_data(v);
       });
-      auto j2 = std::async(std::launch::async, [&arr, &server_b]() {
+      auto j2 = std::async(std::launch::async, [&arr, &server_b, elements_to_send]() {
         std::vector<std::byte> v;
+        v.reserve(elements_to_send);
         std::transform(begin(arr) + elements_to_send,
                        begin(arr) + elements_to_send + elements_to_send,
                        begin(v),
