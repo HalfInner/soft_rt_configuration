@@ -60,7 +60,6 @@ def conv_trace_result_from_file(file: str):
             core_id = int(data[core_id_idx][1:4])
             core_id_suffix = "_" + str(core_id)
             process = process_name + core_id_suffix
-            print (process)
             if ("<idle>" not in process) and ("task_" not in process):
                 process = "other" + core_id_suffix
             

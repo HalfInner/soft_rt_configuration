@@ -80,7 +80,7 @@ sudo systemctl enable ngrok_ssh_tunneling
 ```
 
 ```txt
-For Yield 
+For Yield - didin't spot that stress increase that time, however is 3us longer than for isolcpus
   Job [Server] takes: 28us
   Job [Server Sleep] takes: 0us
   Job [Server] takes: 27us

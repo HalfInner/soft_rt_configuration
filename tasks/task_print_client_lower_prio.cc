@@ -31,6 +31,7 @@ int main(int argc, char *argv[]) {
           [](auto sum, auto v) { return sum + static_cast<int>(v); });
       (void)res;
     }
-    std::this_thread::yield();
+    // std::this_thread::yield();
+    std::this_thread::sleep_for(100us);
   }
 }
