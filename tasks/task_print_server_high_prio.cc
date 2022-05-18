@@ -27,9 +27,10 @@ int main() {
 
   constexpr size_t elements_to_send = naive_ipc::MQ::MAX_MSG_SIZE;
 
+  auto t = HolidayBag::SportTimer("_", "us");
   while (true) {
     {
-      auto t = HolidayBag::SportTimer("Server", "us");
+      auto t1 = HolidayBag::SportTimer("Server", "us");
       // std::shuffle(begin(arr), end(arr), g);
       // auto j1 = std::async(std::launch::async, [&server_a, elements_to_send]() {
         std::vector<std::byte> v; 
@@ -51,10 +52,9 @@ int main() {
       // });
       // j1.get();
       // j2.get();
-      t.stop();
       // std::this_thread::sleep_for(0ms);
-      std::cout << t.getInterSummaryBag().unknit();
     }
+    std::cout << t.getInterSummaryBag().unknit();
     std::this_thread::yield();
   }
 }
