@@ -21,14 +21,14 @@ int main() {
     auto t = HolidayBag::SportTimer("Server", "us");
     auto received_data = client.receive();
 
-    if (!received_data.empty()) {
-      std::cout << "A:";
-      for (auto el : received_data) {
-        std::cout << static_cast<int>(el) << ' ';
-      }
-      std::cout << "\n";
-    } else {
-    }
+    // if (!received_data.empty()) {
+    //   std::cout << "A:";
+    //   for (auto el : received_data) {
+    //     std::cout << static_cast<int>(el) << ' ';
+    //   }
+    //   std::cout << "\n";
+    // } else {
+    // }
     t.stop();
     std::this_thread::sleep_for(1ms);
     // std::this_thread::yield();

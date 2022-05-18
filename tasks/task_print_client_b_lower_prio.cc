@@ -19,17 +19,17 @@ int main() {
   client.initialize(naive_ipc::MQ::WorkPolicy::e_consumer);
   std::cout << "OK\n";
   while (true) {
-    auto t = HolidayBag::SportTimer("Server", "us");
+    auto t = HolidayBag::SportTimer("Client A", "us");
     auto received_data = client.receive();
 
-    if (!received_data.empty()) {
-      std::cout << "B:";
-      for (auto el : received_data) {
-        std::cout << static_cast<int>(el) << ' ';
-      }
-      std::cout << "\n";
-    } else {
-    }
+    // if (!received_data.empty()) {
+    //   std::cout << "B:";
+    //   for (auto el : received_data) {
+    //     std::cout << static_cast<int>(el) << ' ';
+    //   }
+    //   std::cout << "\n";
+    // } else {
+    // }
     t.stop();
     std::this_thread::sleep_for(1s);
     // std::this_thread::yield();
