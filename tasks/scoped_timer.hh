@@ -101,7 +101,7 @@ public:
     _durations_sum += elapsedTime;
     if (++_durations_number >= _factor) {
       _durations_number = 0;
-      auto duration = elapsedTime / _factor;
+      auto duration = _durations_sum / _factor;
       SportTimer::globalSummaryBag.emplace({_name, _unitName, duration});
     }
   }
