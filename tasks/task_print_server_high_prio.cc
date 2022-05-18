@@ -27,32 +27,28 @@ int main() {
 
   constexpr size_t elements_to_send = naive_ipc::MQ::MAX_MSG_SIZE;
 
-  auto t = HolidayBag::SportTimer("_", "us");
+  constexpr int finish_line = 10;
+  auto loops = 0;
+  auto t = HolidayBag::SportTimer("_", "us", 10);
   while (true) {
     {
-      auto t1 = HolidayBag::SportTimer("Server", "us");
       std::shuffle(begin(arr), begin(arr) + 20000, g);
-      // auto j1 = std::async(std::launch::async, [&server_a, elements_to_send]() {
-        std::vector<std::byte> v; 
-        v.reserve(elements_to_send);
-        std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
-                       [](auto el) -> std::byte { return std::byte{el}; });
+      std::vector<std::byte> v;
+      v.reserve(elements_to_send);
+      std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
+                     [](auto el) -> std::byte { return std::byte{el}; });
 
-        server_a.send_data(v);
-      // });
-      // auto j2 = std::async(std::launch::async, [&server_b, elements_to_send]() {
-        // std::vector<std::byte> v;
-        v.reserve(elements_to_send);
-        std::transform(begin(arr) + elements_to_send,
-                       begin(arr) + elements_to_send + elements_to_send,
-                       begin(v),
-                       [](auto el) -> std::byte { return std::byte{el}; });
+      server_a.send_data(v);
+      v.reserve(elements_to_send);
+      std::transform(begin(arr) + elements_to_send,
+                     begin(arr) + elements_to_send + elements_to_send, begin(v),
+                     [](auto el) -> std::byte { return std::byte{el}; });
 
-        server_b.send_data(v);
-      // });
-      // j1.get();
-      // j2.get();
-      // std::this_thread::sleep_for(0ms);
+      server_b.send_data(v);
+      if (++loops >= finish_line) {
+        t.lap();
+        loops = 0;
+      }
     }
     std::cout << t.getInterSummaryBag().unknit();
     std::this_thread::yield();

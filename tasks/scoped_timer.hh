@@ -21,15 +21,15 @@ class SummaryBag {
   };
   std::deque<SummaryBag::Summary> summaries;
 
- public:
+public:
   void emplace(Summary &&summary) { summaries.emplace_front(summary); }
 
   std::string unknit() {
     std::stringstream ss("Summary:\n");
     while (!summaries.empty()) {
       auto &&summary = summaries.back();
-      ss << "  Job [" << summary.jobName << "] takes: " << summary.duration << summary.unit
-         << '\n';
+      ss << "  Job [" << summary.jobName << "] takes: " << summary.duration
+         << summary.unit << '\n';
       summaries.pop_back();
     }
 
@@ -38,10 +38,9 @@ class SummaryBag {
 };
 
 // Mesasures task time till end of scope, or stop() execution
-// All results are transfer to shared SummaryBag, where you can read them once at the end.
-// At the moment Bug is shared only between same Unit parameter.
-template <typename Unit = std::chrono::microseconds>
-class SportTimer {
+// All results are transfer to shared SummaryBag, where you can read them once
+// at the end. At the moment Bug is shared only between same Unit parameter.
+template <typename Unit = std::chrono::microseconds> class SportTimer {
   static SummaryBag globalSummaryBag;
 
   std::string _name;
@@ -55,9 +54,11 @@ class SportTimer {
   std::chrono::time_point<std::chrono::high_resolution_clock> _start, _stop;
 #endif
 
- public:
-  explicit SportTimer(std::string jobName, std::string unitName = "", int factor = 1)
-      : _name(jobName), _unitName(unitName), _factor(factor), _isStopped(false) {
+public:
+  explicit SportTimer(std::string jobName, std::string unitName = "",
+                      int factor = 1)
+      : _name(jobName), _unitName(unitName), _factor(factor),
+        _isStopped(false) {
     if (factor < 1) {
       throw std::invalid_argument("Factor should be larger than 0");
     }
@@ -73,18 +74,21 @@ class SportTimer {
 
   ~SportTimer() { stop(); }
 
+  void lap() {
+    if (_isStopped) {
+      return;
+    }
+
+    auto elapsedTime = finish_lap();
+    auto duration = elapsedTime / _factor;
+    SportTimer::globalSummaryBag.emplace({_name, _unitName, duration});
+  }
+
   void stop() {
     if (_isStopped) {
       return;
     }
-#if _WIN32
-    QueryPerformanceCounter(&_stop_win32);
-    auto elapsedTime =
-        (_stop_win32.QuadPart - _start_win32.QuadPart) * 1000000 / _frequency_win32.QuadPart;
-#else
-    _stop = std::chrono::high_resolution_clock::now();
-    auto elapsedTime = std::chrono::duration_cast<Unit>(_stop - _start).count();
-#endif
+    auto elapsedTime = finish_lap();
     _isStopped = true;
 
     auto duration = elapsedTime / _factor;
@@ -92,9 +96,23 @@ class SportTimer {
   }
 
   SummaryBag &getInterSummaryBag() { return globalSummaryBag; };
+
+private:
+  auto finish_lap() {
+#if _WIN32
+    QueryPerformanceCounter(&_stop_win32);
+    auto elapsedTime = (_stop_win32.QuadPart - _start_win32.QuadPart) *
+                       1000000 / _frequency_win32.QuadPart;
+    _start_win32 = _stop_win32;
+#else
+    _stop = std::chrono::high_resolution_clock::now();
+    auto elapsedTime = std::chrono::duration_cast<Unit>(_stop - _start).count();
+    _start = _stop;
+#endif
+    return elapsedTime;
+  }
 };
 
-template <typename Unit>
-SummaryBag SportTimer<Unit>::globalSummaryBag;
+template <typename Unit> SummaryBag SportTimer<Unit>::globalSummaryBag;
 
 } // namespace HolidayBag
