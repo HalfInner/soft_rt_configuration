@@ -47,6 +47,10 @@ template <typename Unit = std::chrono::microseconds> class SportTimer {
   std::string _unitName;
   int _factor;
   bool _isStopped;
+  bool _is_paused;
+
+  size_t _durations_sum = 0;
+  int _durations_number = 0;
 
 #if _WIN32
   LARGE_INTEGER _start_win32, _stop_win32, _frequency_win32;
@@ -69,6 +73,7 @@ public:
     QueryPerformanceCounter(&_start_win32);
 #else
     _start = std::chrono::high_resolution_clock::now();
+
 #endif
   }
 
@@ -82,6 +87,22 @@ public:
     auto elapsedTime = finish_lap();
     auto duration = elapsedTime / _factor;
     SportTimer::globalSummaryBag.emplace({_name, _unitName, duration});
+  }
+
+  void mini_lap(bool skip = false) {
+    if (_isStopped) {
+      return;
+    }
+
+    auto elapsedTime = finish_lap();
+    if (!skip) {
+      return;
+    }
+    _durations_sum += elapsedTime;
+    if (++_durations_number >= _factor) {
+      auto duration = elapsedTime / _factor;
+      SportTimer::globalSummaryBag.emplace({_name, _unitName, duration});
+    }
   }
 
   void stop() {
