@@ -27,9 +27,9 @@ int main() {
 
   constexpr size_t elements_to_send = naive_ipc::MQ::MAX_MSG_SIZE;
 
-  constexpr int finish_line = 10;
+  constexpr int finish_line = 100;
   auto loops = 0;
-  auto t = HolidayBag::SportTimer("_", "us", 10);
+  auto t = HolidayBag::SportTimer("_", "us", finish_line);
   while (true) {
     {
       std::shuffle(begin(arr), begin(arr) + 20000, g);
