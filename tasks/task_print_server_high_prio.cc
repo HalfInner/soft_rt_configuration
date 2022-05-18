@@ -2,6 +2,7 @@
 #include <array>
 #include <chrono>
 #include <cstdio>
+#include <future>
 #include <iostream>
 #include <iterator>
 #include <numeric>
@@ -26,22 +27,29 @@ int main() {
 
   constexpr size_t elements_to_send = naive_ipc::MQ::MAX_MSG_SIZE;
 
-  std::vector<std::byte> v;
   v.resize(elements_to_send);
   while (true) {
     {
       auto t = HolidayBag::SportTimer("Server", "us");
       std::shuffle(begin(arr), end(arr), g);
-      std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
-                     [](auto el) -> std::byte { return std::byte{el}; });
+      auto j1 = std::async(std::launch::async, [&arr]() {
+        std::vector<std::byte> v; 
+        std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
+                       [](auto el) -> std::byte { return std::byte{el}; });
 
-      server_a.send_data(v);
-      std::transform(begin(arr) + elements_to_send,
-                     begin(arr) + elements_to_send + elements_to_send, begin(v),
-                     [](auto el) -> std::byte { return std::byte{el}; });
+        server_a.send_data(v);
+      });
+      auto j2 = std::async(std::launch::async, [&arr]() {
+        std::vector<std::byte> v;
+        std::transform(begin(arr) + elements_to_send,
+                       begin(arr) + elements_to_send + elements_to_send,
+                       begin(v),
+                       [](auto el) -> std::byte { return std::byte{el}; });
 
-      server_b.send_data(v);
-
+        server_b.send_data(v);
+      });
+      j1.get();
+      j2.get();
       t.stop();
       // std::this_thread::sleep_for(0ms);
       std::cout << t.getInterSummaryBag().unknit();
