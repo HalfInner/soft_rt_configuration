@@ -30,7 +30,7 @@ int main() {
       std::cout << "\n";
     } else {
     }
-    t.stop()
+    t.stop();
     std::this_thread::sleep_for(1s);
     // std::this_thread::yield();
     std::cout << t.getInterSummaryBag().unknit();
