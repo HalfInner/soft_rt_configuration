@@ -21,6 +21,7 @@ int main() {
     auto t = HolidayBag::SportTimer("Client A", "us");
     auto received_data = client.receive();
 
+    std::sort(begin(received_data), end(received_data));
     // if (!received_data.empty()) {
     //   std::cout << "A:";
     //   for (auto el : received_data) {
