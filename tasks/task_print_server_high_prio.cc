@@ -29,10 +29,10 @@ int main() {
 
   constexpr int finish_line = 100;
   auto loops = 0;
-  auto t = HolidayBag::SportTimer("_", "us", finish_line);
+  auto t = HolidayBag::SportTimer("Server", "us", finish_line);
   while (true) {
     {
-      std::shuffle(begin(arr), begin(arr) + 20000, g);
+      std::shuffle(begin(arr), begin(arr) + 10000, g);
       std::vector<std::byte> v;
       v.reserve(elements_to_send);
       std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
