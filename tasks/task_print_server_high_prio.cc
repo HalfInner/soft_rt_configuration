@@ -40,7 +40,7 @@ int main() {
         server_a.send_data(v);
       // });
       // auto j2 = std::async(std::launch::async, [&server_b, elements_to_send]() {
-        std::vector<std::byte> v;
+        // std::vector<std::byte> v;
         v.reserve(elements_to_send);
         std::transform(begin(arr) + elements_to_send,
                        begin(arr) + elements_to_send + elements_to_send,
