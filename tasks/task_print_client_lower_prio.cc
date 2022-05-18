@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
   std::cout << "OK\n";
   while (true) {
     {
-      auto t = HolidayBag::SportTimer("Client B", "us");
+      auto t = HolidayBag::SportTimer("Client " + client_name, "us");
       auto received_data_opt = client.receive();
       if (received_data_opt) {
         auto &received_data = received_data_opt.value();
@@ -40,6 +40,5 @@ int main(int argc, char *argv[]) {
       }
     }
     std::this_thread::sleep_for(100us);
-    // std::this_thread::yield();
   }
 }
