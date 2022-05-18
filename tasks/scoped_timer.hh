@@ -95,7 +95,7 @@ public:
     }
 
     auto elapsedTime = finish_lap();
-    if (!skip) {
+    if (skip) {
       return;
     }
     _durations_sum += elapsedTime;

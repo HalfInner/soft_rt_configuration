@@ -45,12 +45,13 @@ int main() {
                      [](auto el) -> std::byte { return std::byte{el}; });
 
       server_b.send_data(v);
-      if (++loops >= finish_line) {
-        t.lap();
-        loops = 0;
-        std::cout << t.getInterSummaryBag().unknit();
-      }
     }
+    t.mini_lap();
     std::this_thread::yield();
+    t.mini_lap(true);
+    if (++loops >= finish_line) {
+      loops = 0;
+      std::cout << t.getInterSummaryBag().unknit();
+    }
   }
 }
