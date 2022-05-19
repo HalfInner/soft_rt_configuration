@@ -40,7 +40,7 @@ elif [[ "$option" == "configure" ]]; then
             one_ms="1000000"
             hundred_us="10000"
             # config="-d -v  --sched-runtime $hundred_us --sched-deadline $one_ms --sched-period $one_ms"
-            config="-d -v $one_ms --sched-period $one_ms"
+            config="-d -v --sched-period $one_ms"
             printf "deadline\n"
             chrt $config -p 0 $server_task_pid
             chrt $config -p 0 $client_a_task_pid
