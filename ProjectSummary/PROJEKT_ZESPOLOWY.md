@@ -4,8 +4,8 @@
 ## Zespół
 Skład zespołu:
 * Kajetan Brzuszczak 301023 (KB)
-* Kajetan Witkowski 299274 (KW)
-* Ryszard Biernacki 261410 (RB)
+* Anonymous1 (KW)
+* Anonymous2 (RB)
 
 Kajetan Brzuszczak będzie pełnił rolę kierownika projektu.
 
