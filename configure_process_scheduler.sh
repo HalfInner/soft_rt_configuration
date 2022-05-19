@@ -24,7 +24,7 @@ if [[ "$option" == "test" ]]; then
 elif [[ "$option" == "configure" ]]; then
     user_who=$(whoami)
     if [[ "$user_who" == "root" ]]; then 
-        config='-f'
+        config='-f -v' # Set Fifo scheduling
         printf "Mode prio: "
         if [[ "$reverse_mode" == "reverse" ]]; then
             printf "reverse\n"
@@ -36,15 +36,22 @@ elif [[ "$option" == "configure" ]]; then
             chrt $config -p 99 $server_task_pid
             chrt $config -p 99 $client_a_task_pid
             chrt $config -p 99 $client_b_task_pid
+        elif  [[ "$reverse_mode" == "deadline" ]]; then
+            one_ms="1000000"
+            config="-d -v -D $one_ms -P $one_ms"
+            printf "deadline\n"
+            chrt $config -p 99 $server_task_pid
+            chrt $config -p 98 $client_a_task_pid
+            chrt $config -p 97 $client_b_task_pid
         else
             printf "default\n"
             chrt $config -p 99 $server_task_pid
             chrt $config -p 98 $client_a_task_pid
             chrt $config -p 97 $client_b_task_pid
         fi
-            echo $server_task_name $(chrt -p $server_task_pid)
-            echo $client_a_task_name $(chrt -p $client_a_task_pid)
-            echo $client_b_task_name $(chrt -p $client_b_task_pid)
+        echo $server_task_name $(chrt -p $server_task_pid)
+        echo $client_a_task_name $(chrt -p $client_a_task_pid)
+        echo $client_b_task_name $(chrt -p $client_b_task_pid)
     else
         echo "Script has to be executed by the 'root' but was by '$user_who'"
     fi 
