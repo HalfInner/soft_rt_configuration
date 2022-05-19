@@ -23,9 +23,10 @@ elif [[ "$option" == "configure" ]]; then
     if [[ "$user_who" == "root" ]]; then 
         config='-f'
         if [[ "$reverse_mode" == "true" ]]; then
-            echo $(chrt $config -p 99 $server_task_pid)
+            echo "Reverse Prio on"
+            echo $(chrt $config -p 97 $server_task_pid)
             echo $(chrt $config -p 98 $client_a_task_pid)
-            echo $(chrt $config -p 97 $client_b_task_pid)
+            echo $(chrt $config -p 99 $client_b_task_pid)
         else
             echo $(chrt $config -p 99 $server_task_pid)
             echo $(chrt $config -p 98 $client_a_task_pid)
