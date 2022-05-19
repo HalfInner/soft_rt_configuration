@@ -40,9 +40,9 @@ elif [[ "$option" == "configure" ]]; then
             one_ms="1000000"
             config="-d -v -D $one_ms -P $one_ms"
             printf "deadline\n"
-            chrt $config -p 99 $server_task_pid
-            chrt $config -p 98 $client_a_task_pid
-            chrt $config -p 97 $client_b_task_pid
+            chrt $config $server_task_pid
+            chrt $config $client_a_task_pid
+            chrt $config $client_b_task_pid
         else
             printf "default\n"
             chrt $config -p 99 $server_task_pid
