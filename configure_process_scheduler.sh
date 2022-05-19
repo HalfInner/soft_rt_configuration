@@ -18,9 +18,9 @@ client_b_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  $client_b_task_name 
 option=$1
 reverse_mode=$2
 if [[ "$option" == "test" ]]; then
-    echo $(chrt -p $server_task_pid)
-    echo $(chrt -p $client_a_task_pid)
-    echo $(chrt -p $client_b_task_pid)
+    echo $server_task_name $(chrt -p $server_task_pid)
+    echo $client_a_task_name $(chrt -p $client_a_task_pid)
+    echo $client_b_task_name $(chrt -p $client_b_task_pid)
 elif [[ "$option" == "configure" ]]; then
     user_who=$(whoami)
     if [[ "$user_who" == "root" ]]; then 
@@ -42,9 +42,9 @@ elif [[ "$option" == "configure" ]]; then
             chrt $config -p 98 $client_a_task_pid
             chrt $config -p 97 $client_b_task_pid
         fi
-            echo $(chrt -p $server_task_pid)
-            echo $(chrt -p $client_a_task_pid)
-            echo $(chrt -p $client_b_task_pid)
+            echo $server_task_name $(chrt -p $server_task_pid)
+            echo $client_a_task_name $(chrt -p $client_a_task_pid)
+            echo $client_b_task_name $(chrt -p $client_b_task_pid)
     else
         echo "Script has to be executed by the 'root' but was by '$user_who'"
     fi 
