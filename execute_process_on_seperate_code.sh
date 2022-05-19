@@ -15,19 +15,20 @@ fi
 option=$1
 dir=$2
 shuffle_load=$3
+
 defualt_isolated_cpu=3
 if [[ "$option" == "test" ]]; then
     echo "Not Implemented"
 elif [[ "$option" == "configure" ]]; then
     printf "Run on isolated core"
-    taskset -c $defualt_isolated_cpu ./$dir/task_server.a $shuffle_load &
+    taskset -c $defualt_isolated_cpu ./$dir/task_server.a $shuffle_load &> /tmp/isolated_core.out &
     sleep 1
     taskset -c $defualt_isolated_cpu ./$dir/task_client_A.a "A" &
     sleep 1
     taskset -c $defualt_isolated_cpu ./$dir/task_client_B.a "B" &
 elif [[ "$option" == "configure_regular" ]]; then
     printf "Run on default core"
-    ./$dir/task_server.a $shuffle_load &
+    ./$dir/task_server.a $shuffle_load  &> /tmp/regular_core.out &
     sleep 1
     ./$dir/task_client_A.a "A" &
     sleep 1
