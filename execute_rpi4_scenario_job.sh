@@ -10,5 +10,5 @@ fi
 tasks/clean.sh
 
 build_output_directory="output_rpi4"
-tasks/build.sh $build_output_directory
+su pi -c "tasks/build.sh $build_output_directory"
 
