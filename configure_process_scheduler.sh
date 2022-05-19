@@ -39,7 +39,7 @@ elif [[ "$option" == "configure" ]]; then
         elif  [[ "$reverse_mode" == "deadline" ]]; then
             one_ms="1000000"
             hundred_us="10000"
-            config_deadline="-d -v  --sched-runtime 4000000 --sched-deadline 5000000 --sched-period 1000000"
+            config_deadline="-d -v  --sched-runtime 400000 --sched-deadline 500000 --sched-period 1000000"
             # config="-d -v --sched-period $one_ms"
             printf "deadline\n"
             chrt $config_deadline -p 0 $server_task_pid
