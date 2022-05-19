@@ -1,5 +1,4 @@
 #! /usr/bin/bash 
-# For more info: man trace-cmd
 
 user_who=$(whoami)
 if [[ "$user_who" != "root" ]]; then 
@@ -13,10 +12,10 @@ su pi -c "tasks/build.sh $build_output_directory"
 
 LOAD_VALUE=35000
 BASE_LOG_DIR="soft_rt_configuration_logs/"
-
+rm -rf $BASE_LOG_DIR
 function normal_execution_test() {
     server_output="/tmp/normal_execution.log"
-    ./execute_process_on_seperate_code.sh configure_regular $build_output_directory $LOAD_VALUE $server_output
+    su pi -c "./execute_process_on_seperate_code.sh configure_regular $build_output_directory $LOAD_VALUE $server_output"
 
     ./execute_scheduler_tracer.sh false false
     ./execute_scheduler_tracer.sh false true
@@ -28,7 +27,7 @@ function normal_execution_test() {
 
 function isolated_execution_test() {
     server_output="/tmp/isolated_execution.log"
-    ./execute_process_on_seperate_code.sh configure $build_output_directory $LOAD_VALUE $server_output
+    su pi -c "./execute_process_on_seperate_code.sh configure $build_output_directory $LOAD_VALUE $server_output"
 
     ./execute_scheduler_tracer.sh false false
     ./execute_scheduler_tracer.sh false true
@@ -40,7 +39,7 @@ function isolated_execution_test() {
 
 function isolated_fifo_execution_test() {
     server_output="/tmp/isolated_fifo_execution.log"
-    ./execute_process_on_seperate_code.sh configure $build_output_directory $LOAD_VALUE $server_output
+    su pi -c "./execute_process_on_seperate_code.sh configure $build_output_directory $LOAD_VALUE $server_output"
 
     ./execute_scheduler_tracer.sh false false
     ./execute_scheduler_tracer.sh false true
