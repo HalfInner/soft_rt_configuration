@@ -17,7 +17,6 @@ client_b_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  $client_b_task_name 
 
 option=$1
 reverse_mode=$2
-
 if [[ "$option" == "test" ]]; then
     echo $(chrt -p $server_task_pid)
     echo $(chrt -p $client_a_task_pid)
@@ -26,12 +25,19 @@ elif [[ "$option" == "configure" ]]; then
     user_who=$(whoami)
     if [[ "$user_who" == "root" ]]; then 
         config='-f'
-        if [[ "$reverse_mode" == "true" ]]; then
-            echo "Reverse Prio on"
+        printf "Mode prio: "
+        if [[ "$reverse_mode" == "reverse" ]]; then
+            printf "reverse\n"
             echo $server_task_name   $(chrt $config -p 97 $server_task_pid)
             echo $client_a_task_name $(chrt $config -p 98 $client_a_task_pid)
             echo $client_b_task_name $(chrt $config -p 99 $client_b_task_pid)
+        elif  [[ "$reverse_mode" == "equal" ]]; then
+            printf "reverse\n"
+            echo $server_task_name   $(chrt $config -p 99 $server_task_pid)
+            echo $client_a_task_name $(chrt $config -p 99 $client_a_task_pid)
+            echo $client_b_task_name $(chrt $config -p 99 $client_b_task_pid)
         else
+            printf "default\n"
             echo $server_task_name   $(chrt $config -p 99 $server_task_pid)
             echo $client_a_task_name $(chrt $config -p 98 $client_a_task_pid)
             echo $client_b_task_name $(chrt $config -p 97 $client_b_task_pid)
