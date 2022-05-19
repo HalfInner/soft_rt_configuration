@@ -8,8 +8,8 @@ function usage() {
 }
 
 server_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_server | tr -s ' ' | cut -d ' ' -f 2)
-client_a_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_client_a | tr -s ' ' | cut -d ' ' -f 2)
-client_b_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_client_b | tr -s ' ' | cut -d ' ' -f 2)
+client_a_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_client_A | tr -s ' ' | cut -d ' ' -f 2)
+client_b_task_pid=$(ps aux | egrep -v "(bash|grep)" | grep  task_client_B | tr -s ' ' | cut -d ' ' -f 2)
 
 option=$1
 if [[ "$option" == "test" ]]; then
@@ -21,8 +21,8 @@ elif [[ "$option" == "configure" ]]; then
     if [[ "$user_who" == "root" ]]; then 
         config='-f'
         echo $(chrt $config -p 99 $server_task_pid)
-        echo $(chrt $config -p 99 $client_a_task_pid)
-        echo $(chrt $config -p 99 $client_b_task_pid)
+        echo $(chrt $config -p 98 $client_a_task_pid)
+        echo $(chrt $config -p 97 $client_b_task_pid)
     else
         echo "Script has to be executed by the 'root' but was by '$user_who'"
     fi 

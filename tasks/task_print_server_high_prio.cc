@@ -54,8 +54,8 @@ int main(int argc, char *argv[]) {
     }
     t.mini_lap();
     t_2.mini_lap(true);
-    // std::this_thread::yield();
-    std::this_thread::sleep_for(10us);
+    std::this_thread::yield();
+    // std::this_thread::sleep_for(10us);
     t_2.mini_lap(false);
     t.mini_lap(true);
     if (++loops >= finish_line) {
