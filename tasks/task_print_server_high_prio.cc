@@ -37,9 +37,10 @@ int main(int argc, char *argv[]) {
   auto loops = 0;
   std::vector<std::byte> v;
   v.reserve(elements_to_send);
-  auto t = HolidayBag::SportTimer("Server", "us", finish_line);
+  auto t = HolidayBag::SportTimer("Server Work", "us", finish_line);
   auto t_2 = HolidayBag::SportTimer("Server Sleep", "us", finish_line);
   while (true) {
+    auto t_3 = HolidayBag::SportTimer("Server Total", "us", finish_line);
     {
       std::shuffle(begin(arr), begin(arr) + magic_number_to_get_1ms_load, g);
       std::transform(begin(arr), begin(arr) + elements_to_send, begin(v),
