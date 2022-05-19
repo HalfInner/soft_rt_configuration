@@ -3,7 +3,7 @@
 
 function usage() {
     echo "Usage:"
-    echo "      $0 <test|configure|configure_regular> <dir> <shuffle_load>"
+    echo "      $0 <test|configure|configure_regular> <dir> <shuffle_load> <output_file>"
 }
 
 if [[ "$#" -eq 0 ]]; then
@@ -15,13 +15,13 @@ fi
 option=$1
 dir=$2
 shuffle_load=$3
+output_file=$4
 
 defualt_isolated_cpu=3
 if [[ "$option" == "test" ]]; then
     echo "Not Implemented"
 elif [[ "$option" == "configure" ]]; then
     printf "Run on isolated core"
-    output_file="/tmp/isolated_core.out"
     taskset -c $defualt_isolated_cpu ./$dir/task_server.a $shuffle_load &> $output_file &
     sleep 1
     taskset -c $defualt_isolated_cpu ./$dir/task_client_A.a "A" &
@@ -31,7 +31,6 @@ elif [[ "$option" == "configure" ]]; then
     printf "Logs in file '$output_file'\n"
 elif [[ "$option" == "configure_regular" ]]; then
     printf "Run on default core"
-    output_file="/tmp/regular_core.out"
     ./$dir/task_server.a $shuffle_load  &> $output_file &
     sleep 1
     ./$dir/task_client_A.a "A" &

@@ -63,7 +63,7 @@ trace-cmd report -t --ts-diff --cpu 3 > $output_directory/trace_report_cpu3.txt
 trace-cmd report -t --ts-diff --cpu 2 > $output_directory/trace_report_cpu2.txt
 trace-cmd report -t --ts-diff --cpu 1 > $output_directory/trace_report_cpu1.txt
 trace-cmd report -t --ts-diff --cpu 0 > $output_directory/trace_report_cpu0.txt
-trace-cmd report -t --ts-diff > $output_directory/trace_report_full.txt
+trace-cmd report -t --ts-diff         > $output_directory/trace_report_full.txt
 
 chown pi:pi $base_log_directory
 chown pi:pi $output_directory
