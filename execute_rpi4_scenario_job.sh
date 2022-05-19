@@ -16,6 +16,17 @@ su pi -c "tasks/build.sh $build_output_directory"
 LOAD_VALUE=35000
 BASE_LOG_DIR="soft_rt_configuration_logs/"
 rm -rf $BASE_LOG_DIR
+
+function __print_gap_line() {
+    printf "######################################################################\n"
+}
+
+function __sleep_gap() {
+    printf "Sleep... ";
+    sleep 5
+    printf "Done\n"
+}
+
 function normal_execution_test() {
     server_output="/tmp/normal_execution.log"
     su pi -c "./execute_process_on_seperate_code.sh configure_regular $build_output_directory $LOAD_VALUE $server_output"
@@ -52,23 +63,22 @@ function isolated_fifo_execution_test() {
 
     cp $server_output $BASE_LOG_DIR
 }
-
+__print_gap_line
 printf "Regular execution test... "
 normal_execution_test
 printf "Done\n"
-
-printf "Sleep... ";
-sleep 5
-printf "Done\n"
-
+__print_gap_line
+__sleep_gap
+__print_gap_line
 printf "Isolated execution test... "
 isolated_execution_test
 printf "Done\n"
-
-printf "Sleep... ";
-sleep 5
-printf "Done\n"
-
+__print_gap_line
+__sleep_gap
+__print_gap_line
 printf "Isolated fifo execution test... "
 isolated_fifo_execution_test
 printf "Done\n"
+__print_gap_line
+
+printf "All test are done!"

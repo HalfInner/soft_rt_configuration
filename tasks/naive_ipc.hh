@@ -40,7 +40,7 @@ public:
       if(mq_unlink(name_.c_str()) == 0) {
         std::cout << "Message queue '" << name_.c_str() << "' removed from system. ";
       }
-      if ((mq_ = mq_open(name_.c_str(), O_WRONLY | O_CREAT, QUEUE_PERMISSIONS,
+      if ((mq_ = mq_open(name_.c_str(), O_WRONLY | O_CREAT | O_NONBLOCK, QUEUE_PERMISSIONS,
                          &attr)) == -1) {
         std::string error = "naive_ipc::MQ Not able to create mq PRODUCER:";
         perror(error.c_str());
@@ -59,13 +59,17 @@ public:
 
   void deinitialize() { mq_close(mq_); }
 
-  void send_data(const std::vector<std::byte> &payload) {
+  bool send_data(const std::vector<std::byte> &payload) {
     if (mq_send(mq_, reinterpret_cast<const char *>(payload.data()),
                 payload.size(), 0) == -1) {
+      if (errno == EAGAIN) {
+        return false;
+      }
       perror("ERROR:");
       throw std::runtime_error(
           "naive_ipc::MQ: Not able to send message to client");
     }
+    return true;
   }
 
   std::optional<std::vector<std::byte>> receive() {
