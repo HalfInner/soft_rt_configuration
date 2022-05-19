@@ -18,7 +18,9 @@ if [[  "$only_main_processes" -eq "true" ]]; then
     args="-P $server_task_pid -P $client_a_task_pid -P $client_b_task_pid -P $IDLE_pid"
 fi
 
-stress -c 4 -t 10 &
+# stress -c 4 -t 10 & # previous version
+# Load all equipment
+stress --cpu 4 --io 4 --vm 2 --vm-bytes 128M --timeout 10s & 
 stress_pid=$!
 
 echo "Execute tracing"
