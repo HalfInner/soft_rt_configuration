@@ -37,8 +37,8 @@ int main(int argc, char *argv[]) {
   auto loops = 0;
   std::vector<std::byte> v;
   v.reserve(elements_to_send);
-  auto t = HolidayBag::SportTimer("Server Work", "us", finish_line);
-  auto t_2 = HolidayBag::SportTimer("Server Sleep", "us", finish_line);
+  auto t = HolidayBag::SportTimer("\tServer Work", "us", finish_line);
+  auto t_2 = HolidayBag::SportTimer("\tServer Sleep", "us", finish_line);
   auto t_3 = HolidayBag::SportTimer("Server Total", "us", finish_line);
   while (true) {
     {
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
     t_2.mini_lap(true);
     std::this_thread::yield();
     // std::this_thread::sleep_for(10us);
-    t_2.mini_lap(false);
+    t_2.mini_lap();
     t.mini_lap(true);
     if (++loops >= finish_line) {
       loops = 0;
