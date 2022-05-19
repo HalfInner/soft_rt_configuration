@@ -40,6 +40,7 @@ function isolated_execution_test() {
 function isolated_fifo_execution_test() {
     server_output="/tmp/isolated_fifo_execution.log"
     su pi -c "./execute_process_on_seperate_code.sh configure $build_output_directory $LOAD_VALUE $server_output"
+    ./configure_process_scheduler.sh configure equal
 
     ./execute_scheduler_tracer.sh false false
     ./execute_scheduler_tracer.sh false true
