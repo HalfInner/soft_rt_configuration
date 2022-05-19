@@ -28,7 +28,9 @@ elif [[ "$option" == "configure" ]]; then
 elif [[ "$option" == "configure_regular" ]]; then
     printf "Run on default core"
     ./$dir/task_server.a $shuffle_load &
+    sleep 1
     ./$dir/task_client_A.a "A" &
+    sleep 1
     ./$dir/task_client_B.a "B" &
 else 
     usage
