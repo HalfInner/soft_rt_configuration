@@ -38,11 +38,12 @@ elif [[ "$option" == "configure" ]]; then
             chrt $config -p 99 $client_b_task_pid
         elif  [[ "$reverse_mode" == "deadline" ]]; then
             one_ms="1000000"
-            config="-d -v -D $one_ms -P $one_ms -p 0"
+            hundred_us="100000"
+            config="-d -v  -T $hundred_usm -D $one_ms -P $one_ms"
             printf "deadline\n"
-            chrt $config $server_task_pid
-            chrt $config $client_a_task_pid
-            chrt $config $client_b_task_pid
+            chrt $config -p 0 $server_task_pid
+            chrt $config -p 0 $client_a_task_pid
+            chrt $config -p 0 $client_b_task_pid
         else
             printf "default\n"
             chrt $config -p 99 $server_task_pid
