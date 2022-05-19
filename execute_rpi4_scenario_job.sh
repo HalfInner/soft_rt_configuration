@@ -49,6 +49,22 @@ function isolated_fifo_execution_test() {
     cp $server_output $BASE_LOG_DIR
 }
 
+printf "Regular execution test... "
 normal_execution_test
+printf "Done\n"
+
+printf "Sleep... ";
+sleep 5
+printf "Done\n"
+
+printf "Isolated execution test... "
 isolated_execution_test
+printf "Done\n"
+
+printf "Sleep... ";
+sleep 5
+printf "Done\n"
+
+printf "Isolated fifo execution test... "
 isolated_fifo_execution_test
+printf "Done\n"
