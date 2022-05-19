@@ -5,7 +5,10 @@ if [[ "$user_who" != "root" ]]; then
     echo "Script has to be executed by the 'root' but was by '$user_who'"
     exit 1
 fi
+printf "2022 (C) Kajetan Brzuszczak\n"
+printf "Starting RPI4 research scheduler\n"
 
+printf "Building\n"
 tasks/clean.sh
 build_output_directory="output_rpi4"
 su pi -c "tasks/build.sh $build_output_directory"
