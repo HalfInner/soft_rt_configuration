@@ -21,18 +21,24 @@ if [[ "$option" == "test" ]]; then
     echo "Not Implemented"
 elif [[ "$option" == "configure" ]]; then
     printf "Run on isolated core"
-    taskset -c $defualt_isolated_cpu ./$dir/task_server.a $shuffle_load &> /tmp/isolated_core.out &
+    output_file="/tmp/isolated_core.out"
+    taskset -c $defualt_isolated_cpu ./$dir/task_server.a $shuffle_load &> $output_file &
     sleep 1
     taskset -c $defualt_isolated_cpu ./$dir/task_client_A.a "A" &
     sleep 1
     taskset -c $defualt_isolated_cpu ./$dir/task_client_B.a "B" &
+
+    printf "Logs in file '$output_file'\n"
 elif [[ "$option" == "configure_regular" ]]; then
     printf "Run on default core"
-    ./$dir/task_server.a $shuffle_load  &> /tmp/regular_core.out &
+    output_file="/tmp/regular_core.out"
+    ./$dir/task_server.a $shuffle_load  &> $output_file &
     sleep 1
     ./$dir/task_client_A.a "A" &
     sleep 1
     ./$dir/task_client_B.a "B" &
+
+    printf "Logs in file '$output_file'\n"
 else 
     usage
 fi
