@@ -49,7 +49,11 @@ SIGINT=2
 kill -$SIGINT $tracer_pid
 if [[ "$include_stress" == "true" ]]; then
     printf "Stop stress... "
-    kill -$SIGINT $stress_pid
+    if [[ -z "$stress_pid" ]]; then 
+        ps aux | grep stress | tr -s ' ' | cut  -d ' ' -f 2 | xargs kill -$SIGINT
+    else
+        kill -$SIGINT $stress_pid
+    fi
     printf "Done\n"
 fi
 
