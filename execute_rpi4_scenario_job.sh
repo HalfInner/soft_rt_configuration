@@ -33,8 +33,11 @@ function normal_execution_test() {
     su pi -c "./execute_process_on_seperate_code.sh configure_regular $build_output_directory $LOAD_VALUE $server_output"
 
     ./execute_scheduler_tracer.sh false false
+    __sleep_gap 4
     ./execute_scheduler_tracer.sh false true
+    __sleep_gap 4
     ./execute_scheduler_tracer.sh true true
+    __sleep_gap 4
     tasks/clean.sh
 
     cp $server_output $BASE_LOG_DIR
@@ -45,7 +48,9 @@ function isolated_execution_test() {
     su pi -c "./execute_process_on_seperate_code.sh configure $build_output_directory $LOAD_VALUE $server_output"
 
     ./execute_scheduler_tracer.sh false false
+    __sleep_gap 4
     ./execute_scheduler_tracer.sh false true
+    __sleep_gap 4
     ./execute_scheduler_tracer.sh true true
     tasks/clean.sh
 
@@ -58,7 +63,9 @@ function isolated_fifo_execution_test() {
     ./configure_process_scheduler.sh configure equal
 
     ./execute_scheduler_tracer.sh false false
+    __sleep_gap 4
     ./execute_scheduler_tracer.sh false true
+    __sleep_gap 4
     ./execute_scheduler_tracer.sh true true
     tasks/clean.sh
 
