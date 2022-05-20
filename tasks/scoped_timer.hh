@@ -85,9 +85,9 @@ public:
       return;
     }
 
-    auto elapsedTime = finish_lap();
+    auto [elapsedTime, timestamp] = finish_lap();
     auto duration = elapsedTime / _factor;
-    SportTimer::globalSummaryBag.emplace({_name, _unitName, duration});
+    SportTimer::globalSummaryBag.emplace({_name, _unitName, duration, timestamp});
   }
 
   void mini_lap(bool skip = false) {
@@ -95,7 +95,7 @@ public:
       return;
     }
 
-    auto elapsedTime = finish_lap();
+    auto [elapsedTime, timestamp] = finish_lap();
     if (skip) {
       return;
     }
@@ -104,7 +104,7 @@ public:
       _durations_number = 0;
       auto duration = _durations_sum / _factor;
       _durations_sum = _durations_sum % _factor;
-      SportTimer::globalSummaryBag.emplace({_name, _unitName, duration});
+      SportTimer::globalSummaryBag.emplace({_name, _unitName, duration, timestamp});
     }
   }
 
@@ -112,11 +112,11 @@ public:
     if (_isStopped) {
       return;
     }
-    auto elapsedTime = finish_lap();
+    auto [elapsedTime, timestamp] = finish_lap();
     _isStopped = true;
 
     auto duration = elapsedTime / _factor;
-    SportTimer::globalSummaryBag.emplace({_name, _unitName, duration});
+    SportTimer::globalSummaryBag.emplace({_name, _unitName, duration, timestamp});
   }
 
   SummaryBag &getInterSummaryBag() { return globalSummaryBag; };
