@@ -3,6 +3,8 @@ from csv import excel
 import math
 import matplotlib.pyplot as plt
 import sys
+import matplotlib as mpl
+mpl.rcParams['agg.path.chunksize'] = 10000
 
 
 class ProcessChart:
@@ -104,12 +106,13 @@ def conv_trace_result_from_file(file: str):
 
 
 def plot_set(process_charts, min_timestamp, max_timestamp, store_filename):
+    
     process_charts = sorted(process_charts, key=lambda chart: chart.get_name())
     channels = len(process_charts)
     _, axis = plt.subplots(nrows=channels, sharex='all', constrained_layout=False, figsize=(10,9))
     for idx, chart in enumerate(process_charts):
         local_axis = axis[idx] if channels > 1 else axis
-        local_axis.plot(chart.get_axis_x(), chart.get_axis_y())
+        local_axis.plot(chart.get_axis_x(), chart.get_axis_y(), linewidth=0.5, markersize=1)
         local_axis.set_title(chart.get_name(), loc='left', pad=.01)
         local_axis.set_xlim([min_timestamp, max_timestamp])
     plt.tight_layout()
