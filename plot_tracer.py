@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+from csv import excel
 import math
 import matplotlib.pyplot as plt
 import sys
@@ -100,11 +101,13 @@ def conv_trace_result_from_file(file: str):
 
 def plot_set(process_charts, min_timestamp, max_timestamp, store_filename):
     process_charts = sorted(process_charts, key=lambda chart: chart.get_name())
-    _, axis = plt.subplots(nrows=len(process_charts), sharex='all', constrained_layout=False, figsize=(10,9))
+    channels = len(process_charts)
+    _, axis = plt.subplots(nrows=channels, sharex='all', constrained_layout=False, figsize=(10,9))
     for idx, chart in enumerate(process_charts):
-        axis[idx].plot(chart.get_axis_x(), chart.get_axis_y())
-        axis[idx].set_title(chart.get_name(), loc='left', pad=.01)
-        axis[idx].set_xlim([min_timestamp, max_timestamp])
+        local_axis = axis[idx] if channels > 1 else axis
+        local_axis.plot(chart.get_axis_x(), chart.get_axis_y())
+        local_axis.set_title(chart.get_name(), loc='left', pad=.01)
+        local_axis.set_xlim([min_timestamp, max_timestamp])
     plt.tight_layout()
     if store_filename:
         plt.savefig(store_filename, dpi=300.)
@@ -113,13 +116,16 @@ def plot_set(process_charts, min_timestamp, max_timestamp, store_filename):
 
 
 def main(argv):
-    processes, min_timestamp, max_timestamp = conv_trace_result_from_file(
-        argv[1])
-    store_filename=None
-    if (len(argv) > 2):
-        store_filename = argv[2]
-    plot_set(processes, min_timestamp, max_timestamp, store_filename)
-
+    try:
+        processes, min_timestamp, max_timestamp = conv_trace_result_from_file(
+            argv[1])
+        store_filename=None
+        if (len(argv) > 2):
+            store_filename = argv[2]
+        plot_set(processes, min_timestamp, max_timestamp, store_filename)
+    except Exception as e:
+        print("ERROR: Program crashed:", argv)
+        print("ERROR:", e)
 
 if __name__ == "__main__":
     main(sys.argv)

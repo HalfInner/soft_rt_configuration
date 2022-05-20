@@ -54,7 +54,7 @@ if [[ "$include_stress" == "true" ]]; then
     # else
     #     kill -$SIGINT $stress_pid
     # fi
-    ps aux | grep stress | tr -s ' ' | cut  -d ' ' -f 2 | xargs kill -9 
+    ps aux | grep stress | tr -s ' ' | cut  -d ' ' -f 2 | xargs kill -9 &> /dev/null
     printf "Done\n"
 fi
 
