@@ -81,21 +81,28 @@ function isolated_fifo_execution_test() {
     cp $server_output $BASE_LOG_DIR
 }
 __print_gap_line
+__remove_mq_queues
+
+__print_gap_line
 printf "Regular execution test... "
 normal_execution_test
 printf "Done\n"
+
 __print_gap_line
 __sleep_gap 5
+
 __print_gap_line
 printf "Isolated execution test... "
 isolated_execution_test
 printf "Done\n"
+
 __print_gap_line
 __sleep_gap 5
+
 __print_gap_line
 printf "Isolated fifo execution test... "
 isolated_fifo_execution_test
 printf "Done\n"
-__print_gap_line
 
+__print_gap_line
 printf "All test are done!\n"
