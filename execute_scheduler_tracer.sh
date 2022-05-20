@@ -9,10 +9,10 @@ fi
 
 only_main_processes="false"
 include_stress="false"
-if [[ "$#" -ge  "2" ]]; then
+if [[ "$#" -ge  "1" ]]; then
     only_main_processes=$1
 fi
-if [[ "$#" -ge  "3" ]]; then
+if [[ "$#" -ge  "2" ]]; then
     include_stress=$2
 fi
 echo "Execute tracer with parameters only_main_processes='$1' include_stress='$2'"
