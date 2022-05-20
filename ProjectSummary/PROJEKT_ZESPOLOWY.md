@@ -7,7 +7,7 @@ Skład zespołu:
 * Anonymous1 (KW)
 * Anonymous2 (RB)
 
-Kajetan Brzuszczak będzie pełnił rolę kierownika projektu.
+Kajetan Brzuszczak pełnił rolę kierownika projektu.
 
 
 ## Założenia projektu

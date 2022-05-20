@@ -22,8 +22,9 @@ function __print_gap_line() {
 }
 
 function __sleep_gap() {
-    printf "Sleep... ";
-    sleep 5
+    delay=$1
+    printf "Sleep ${delay}s... ";
+    sleep $delay
     printf "Done\n"
 }
 
@@ -68,17 +69,17 @@ printf "Regular execution test... "
 normal_execution_test
 printf "Done\n"
 __print_gap_line
-__sleep_gap
+__sleep_gap 5
 __print_gap_line
 printf "Isolated execution test... "
 isolated_execution_test
 printf "Done\n"
 __print_gap_line
-__sleep_gap
+__sleep_gap 5
 __print_gap_line
 printf "Isolated fifo execution test... "
 isolated_fifo_execution_test
 printf "Done\n"
 __print_gap_line
 
-printf "All test are done!"
+printf "All test are done!\n"

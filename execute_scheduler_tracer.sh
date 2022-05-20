@@ -33,7 +33,6 @@ if [[ "$include_stress" == "true" ]]; then
     echo "Run stress CPU"
     # su pi -c "stress -c 4 -t 25 > /dev/null &"
     su pi -c "stress --cpu 4 --io 4 --vm 2 --vm-bytes 128M --timeout 20s &  > /dev/null &"
-
     stress_pid=$!
 fi
 
@@ -48,10 +47,11 @@ sleep $time_to_record # record data for 5 seconds
 
 SIGINT=2
 kill -$SIGINT $tracer_pid
-# if [[ "$include_stress" -eq "true" ]]; then
-#     echo "Stop "
-#     kill -$SIGINT $stress_pid
-# fi
+if [[ "$include_stress" -eq "true" ]]; then
+    printf "Stop stress... "
+    kill -$SIGINT $stress_pid
+    printf "Done\n"
+fi
 
 echo "Waits for a while to collect"
 sleep 5 # wait for a while to collect traces

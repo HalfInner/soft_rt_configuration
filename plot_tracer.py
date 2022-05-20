@@ -100,13 +100,14 @@ def conv_trace_result_from_file(file: str):
 
 def plot_set(process_charts, min_timestamp, max_timestamp, store_filename):
     process_charts = sorted(process_charts, key=lambda chart: chart.get_name())
-    _, axis = plt.subplots(nrows=len(process_charts), sharex='all')
+    _, axis = plt.subplots(nrows=len(process_charts), sharex='all', constrained_layout=False, figsize=(10,9))
     for idx, chart in enumerate(process_charts):
         axis[idx].plot(chart.get_axis_x(), chart.get_axis_y())
-        axis[idx].set_title(chart.get_name())
+        axis[idx].set_title(chart.get_name(), loc='left', pad=.01)
         axis[idx].set_xlim([min_timestamp, max_timestamp])
+    plt.tight_layout()
     if store_filename:
-        plt.savefig(store_filename, dpi=600.)
+        plt.savefig(store_filename, dpi=300.)
     else:
         plt.show()
 
