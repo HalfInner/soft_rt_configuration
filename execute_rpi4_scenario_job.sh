@@ -10,6 +10,7 @@ printf "2022 (C) Kajetan Brzuszczak\n"
 function usage() {
     echo "Usage:"
     echo "      $0 <load>"
+    echo "Recommended load=35000"
 }
 
 if [[ "$#" -eq 0 ]]; then
