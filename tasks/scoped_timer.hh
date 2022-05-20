@@ -133,7 +133,7 @@ private:
     auto elapsedTime = std::chrono::duration_cast<Unit>(_stop - _start).count();
     _start = _stop;
 #endif
-    return {elapsedTime, timestamp(_start)};
+    return { elapsedTime, timestamp(_start) };
   }
 
   constexpr int64_t timestamp(const std::chrono::system_clock::time_point &time_point) {
