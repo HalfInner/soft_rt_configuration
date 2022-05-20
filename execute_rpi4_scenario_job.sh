@@ -17,6 +17,15 @@ LOAD_VALUE=35000
 BASE_LOG_DIR="soft_rt_configuration_logs/"
 rm -rf $BASE_LOG_DIR
 
+
+function __remove_mq_queues() {
+    printf "Removing mqueues files... "
+    rm -f /dev/mqueue/A
+    rm -f /dev/mqueue/B
+    printf "Done\n"
+}
+
+
 function __print_gap_line() {
     printf "######################################################################\n"
 }
