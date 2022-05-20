@@ -47,7 +47,7 @@ sleep $time_to_record # record data for 5 seconds
 
 SIGINT=2
 kill -$SIGINT $tracer_pid
-if [[ "$include_stress" -eq "true" ]]; then
+if [[ "$include_stress" == "true" ]]; then
     printf "Stop stress... "
     kill -$SIGINT $stress_pid
     printf "Done\n"
