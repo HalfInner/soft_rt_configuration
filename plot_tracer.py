@@ -50,7 +50,11 @@ def conv_trace_result_from_file(file: str):
         "CPU 1 is empty",
         "CPU 2 is empty",
         "CPU 3 is empty",
-        "cpus=4"
+        "CPU:0 [EVENTS DROPPED]",
+        "CPU:1 [EVENTS DROPPED]",
+        "CPU:2 [EVENTS DROPPED]",
+        "CPU:3 [EVENTS DROPPED]",
+        "cpus=4",
     }
     with open(file) as f:
         for line in f:
@@ -59,10 +63,10 @@ def conv_trace_result_from_file(file: str):
             data = line.split()
             process_name = data[process_idx].split('-')[0]
             core_id = int(data[core_id_idx][1:4])
-            core_id_suffix = "_" + str(core_id)
+            core_id_suffix = "_CPU" + str(core_id)
             process = process_name + core_id_suffix
             if ("<idle>" not in process) and ("task_" not in process):
-                process = "other" + core_id_suffix
+                process = "LOAD" + core_id_suffix
             
             timestamp = float(data[timestamp_id].replace(':', ''))
             min_timestamp = min(timestamp, min_timestamp)
@@ -84,8 +88,8 @@ def conv_trace_result_from_file(file: str):
                 next_task = data[-2].split(':')[0] + core_id_suffix
                 if next_task.split('/')[0] == "swapper":
                     next_task = "<idle>" + core_id_suffix
-                if (next_task != "<idle>" + core_id_suffix) and "task_" not in next_task:
-                    next_task = "other" + core_id_suffix
+                if (next_task != "<idle>" + core_id_suffix) and ("task_" not in next_task):
+                    next_task = "LOAD" + core_id_suffix
                 curr_process = processes[next_task] if next_task in processes else ProcessChart(
                     next_task)
                 curr_process.turn_on(timestamp)
@@ -126,6 +130,7 @@ def main(argv):
     except Exception as e:
         print("ERROR: Program crashed:", argv)
         print("ERROR:", e)
+        print("ERROR:", e.with_traceback())
 
 if __name__ == "__main__":
     main(sys.argv)

@@ -18,6 +18,7 @@ class SummaryBag {
     std::string jobName;
     std::string unit;
     int64_t duration;
+    int64_t timestamp;
   };
   std::deque<SummaryBag::Summary> summaries;
 
@@ -28,7 +29,7 @@ public:
     std::stringstream ss("Summary:\n");
     while (!summaries.empty()) {
       auto &&summary = summaries.back();
-      ss << "  Job [" << summary.jobName << "] takes: " << summary.duration
+      ss << summary.timestamp << "::" << summary.jobName << "::" << summary.duration
          << summary.unit << '\n';
       summaries.pop_back();
     }
@@ -132,8 +133,14 @@ private:
     auto elapsedTime = std::chrono::duration_cast<Unit>(_stop - _start).count();
     _start = _stop;
 #endif
-    return elapsedTime;
+    return {elapsedTime, timestamp(_start)};
   }
+
+  constexpr int64_t timestamp(const std::chrono::system_clock::time_point &time_point) {
+    std::chrono::system_clock::duration duration = time_point.time_since_epoch();
+    int64_t timestamp = duration.count();
+    return timestamp;
+}
 };
 
 template <typename Unit> SummaryBag SportTimer<Unit>::globalSummaryBag;
