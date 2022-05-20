@@ -130,7 +130,6 @@ def main(argv):
     except Exception as e:
         print("ERROR: Program crashed:", argv)
         print("ERROR:", e)
-        print("ERROR:", e.with_traceback())
 
 if __name__ == "__main__":
     main(sys.argv)

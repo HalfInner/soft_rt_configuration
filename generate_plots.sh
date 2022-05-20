@@ -13,10 +13,16 @@ if [[ "$#" -ne "1" ]]; then
 fi
 
 directory=$1
-for d in $directory/*/ ; do
-    echo "$d"
-    for subd in $d/*.txt; do
-        echo "Plot $subd"
-        python plot_tracer.py $subd $subd.png &
-    done
+# for d in $directory/*/ ; do
+#     echo "$d"
+#     for subd in $d/*.txt; do
+#         echo "Plot $subd"
+#         python plot_tracer.py $subd $subd.png &
+#     done
+# done
+
+for f in $directory/*.log ; do
+    echo "Plot '$f'"
+    python plot_execution_time.py $f $f.png &
 done
+
