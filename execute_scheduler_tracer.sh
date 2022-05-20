@@ -33,7 +33,7 @@ if [[ "$include_stress" == "true" ]]; then
     echo "Run stress CPU"
     # su pi -c "stress -c 4 -t 25 > /dev/null &"
     # su pi -c "stress --cpu 4 --io 4 --vm 2 --vm-bytes 128M --timeout 20s &  > /dev/null &"
-    stress --cpu 4 --io 4 --vm 2 --vm-bytes 128M  > /dev/null &
+    stress --cpu 4 --io 4 --vm 2 --vm-bytes 128M  &> /dev/null &
     stress_pid=$!
 fi
 
