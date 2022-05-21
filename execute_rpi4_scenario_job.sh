@@ -19,17 +19,19 @@ if [[ "$#" -eq 0 ]]; then
     exit 1
 fi
 
+# LOAD_VALUE=35000
+LOAD_VALUE=$1
+BASE_LOG_DIR="soft_rt_configuration_logs/"
+rm -rf $BASE_LOG_DIR
+
 printf "Starting RPI4 research scheduler\n"
+printf "\twith load=$1\n"
 
 printf "Building\n"
 tasks/clean.sh
 build_output_directory="output_rpi4"
 su pi -c "tasks/build.sh $build_output_directory"
 
-# LOAD_VALUE=35000
-LOAD_VALUE=$1
-BASE_LOG_DIR="soft_rt_configuration_logs/"
-rm -rf $BASE_LOG_DIR
 
 function __remove_mq_queues() {
     __print_gap_line

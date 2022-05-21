@@ -12,17 +12,17 @@ if [[ "$#" -ne "1" ]]; then
     exit 1
 fi
 
-directory=$1
-for d in $directory/*/ ; do
+LOG_DIRECTORY=$1
+for f in $LOG_DIRECTORY/*.log ; do
+    echo "Plot '$f'"
+    python plot_execution_time.py $f $f.png &
+done
+
+for d in $LOG_DIRECTORY/*/ ; do
     echo "$d"
     for subd in $d/*.txt; do
         echo "Plot $subd"
         python plot_tracer.py $subd $subd.png &
     done
-done
-
-for f in $directory/*.log ; do
-    echo "Plot '$f'"
-    python plot_execution_time.py $f $f.png &
 done
 

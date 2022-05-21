@@ -28,7 +28,7 @@ class Task:
         return self.__axis_y
 
 
-def plot(tasks: List[Task], min_timestamp, max_timestamp, filename, store_filename):
+def plot(tasks: List[Task], min_timestamp, max_timestamp, max_duration, filename, store_filename):
 
     # _, axis = plt.subplots(nrows=channels, sharex='all', constrained_layout=False, figsize=(10,9))
     # for idx, chart in enumerate(process_charts):
@@ -45,7 +45,11 @@ def plot(tasks: List[Task], min_timestamp, max_timestamp, filename, store_filena
     plt.xlabel('timestamp')
     plt.ylabel('t(us)')
     plt.title(filename.split('/')[-1])
-    plt.ylim([0, 2500])
+    
+    minimum_height = 2500
+    top_y_lim = max(minimum_height, max_duration * 1.05)
+    
+    plt.ylim([0, top_y_lim])
     plt.legend(loc='upper left')
     plt.tight_layout()
     if store_filename:
@@ -58,6 +62,7 @@ def conv_trace_result_from_file(filename):
     datei = {}
     min_timestamp = None
     max_timestamp = None
+    max_duration = None
     with open(filename) as f:
         for line in f:
             data = line.split('::')
@@ -74,23 +79,28 @@ def conv_trace_result_from_file(filename):
             max_timestamp = max(max_timestamp, timestamp)
 
             task_name = data[1].strip()
+
             duration = int(data[2][0:-3])
+            if max_duration is None:
+                max_duration = duration
+            max_duration = max(max_duration, duration)
+
             task = datei[task_name] if task_name in datei else Task(task_name)
             task.add(timestamp, duration)
             datei[task_name] = task
 
-    return sorted(datei.values(), key=lambda task: task.name()), min_timestamp, max_timestamp
+    return sorted(datei.values(), key=lambda task: task.name()), min_timestamp, max_timestamp, max_duration
 
 
 def main(argv):
     try:
         filename = argv[1]
-        tasks, min_timestamp, max_timestamp = conv_trace_result_from_file(
+        tasks, min_timestamp, max_timestamp, max_duration = conv_trace_result_from_file(
             filename)
         store_filename = None
         if (len(argv) > 2):
             store_filename = argv[2]
-        plot(tasks, min_timestamp, max_timestamp, filename, store_filename)
+        plot(tasks, min_timestamp, max_timestamp, max_duration, filename, store_filename)
     except Exception as e:
         print("ERROR: Program crashed:", argv)
         print("ERROR:", e)
