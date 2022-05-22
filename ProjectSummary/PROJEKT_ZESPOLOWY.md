@@ -29,28 +29,6 @@ Przykładowy zrzut ekranu z rozpisaniem tablicą Kanban w aplikacji Trello
 Przykładowy zrzut ekranu ze współdzieloną przestrzenią na pliki 
 ![OneDrive](./res/one_drive.png "OneDrive")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Analiza problemu
 Implementację Soft Real Time Linux podzieliliśmy na mniejsze problemy, opisane poniżej, gdzie w końcowym rozrachunku sama konfiguracja linux'a stanowiła mniejszą cześć projektu. Większą była przygotowanie aplikacji do testów oraz wykonanie wiarygodnych pomiarów.
 
@@ -162,7 +140,7 @@ Zakładamy, że jeden z procesów jest w stanie stabilnie wykonywać swoje zadan
 
 Wysyłanie danych wymaga użycia przestrzeni wspólnej dla procesów, dlatego wybrano linuxową kolejkę mq_queue. Poza tym, że Serwer i Klient muszą zapiąć się do tej samej kolejki w celu przekazywanie danych, istotnym elementem tutaj jest to, że wysłanie angażuje Kernel, który jest współdzielony pomiędzy procesy. Sam mechanizm posiada dodatkową warstwę abstrakcji w celu implementacji w pliku `naive_ipc.hh`
 
-**N** - nastaw do konfigurowania liniowego obciążenia procesu. Im większa wartość, tym czas pracy Serwera jest dłuższy.
+**N** - nastaw do konfigurowania liniowego obciążenia procesu. Im większa wartość, tym czas pracy Serwera jest dłuższy. Same wartości N zostały dobrane empirycznie.
 
 ### Konfiguracja Linux
 Ze względu na procesor 4-rdzeniowy izolacji został poddany ostatni CPU o indeksie 3 - dla numeracji od zera.  Konfigurowanie polega na dodaniu `isolcpus=3` w pliku bootloadera `/boot/cmdline.txt`. Następnie potrzebujemy ponownego uruchomienia systemu. 
@@ -192,15 +170,176 @@ Składa się z trzech kroków:
 3. _opcjonalnie_ Pobranie folderu z wynikami testu np. narzędziem scp
 4. Wygenerowanie wykresów z logów za pomocą skryptu `generate_plots.sh` z podanym folderem z logami jako parametr
 
-## Oczekiwane rezultaty
+### Scenariusz testowy
+**Warunek wstępny**
+Wyizolowany CPU3 
 
-Weryfikacja:
-* Izolacja CPU  
-  ![isolated_cpu](logs/isolated_cpu.png "isolated_cpu")
-* Izolacja CPU z dodatkowym obciążeniem systemu  
-  ![isolated_cpu_stress](logs/isolated_cpu_stress.png "isolated_cpu_stress")
-* Izolacja CPU z dodatkowym obciążeniem systemu, bez przypisania zadań do odizolowanego CPU  
-  ![isolated_cpu_stress_no_affinity](logs/isolated_cpu_stress_no_affinity.png "isolated_cpu_stress_no_affinity")
+**Scenariusz**
+* funkcja uruchom_aplikacje():
+    1. Uruchom aplikację Server z parametrem **N**
+    1. Uruchom aplikację Klient z parametrem 'A'
+    1. Uruchom aplikację Klient z parametrem 'B'
+
+* funkcja wykonaj_pomiar(nazwa_folderu):
+    1. Uruchom zbieranie logów wywłaszczania z każdego CPU przez 10s
+    1. Zapisz logi do nazwa_folderu
+    1. Uruchom aplikację stress
+    1. Uruchom zbieranie logów wywłaszczania z każdego CPU przez 10s
+    1. Zakończ aplikację stress
+    1. Zapisz logi do nazwa_folderu + '_stress'
+    1. Dla każdego procesu ze zbioru {_task\_server.a task\_klient\_A.a task\_klient\_B.a_}:
+        1. Zakończ proces
+
+
+1. Wyczyść ostatnio użyte kolejki mq_queue
+1. Wyczyść ostatnio użyty folder z logami
+1. Zbuduj aplikację Server jako _task\_server.a_
+1. Zbuduj aplikację Klient jako _task\_klient\_A.a_ oraz  _task\_klient\_B.a_ 
+1. Dla każdego **N** w zbiorze {10000, 35000, 60000}:
+    1. uruchom_aplikacje()
+    1. umieść aplikację na _domyślnych_ CPU
+    1. wykonaj_pomiar('domyślny_cpu')
+    1. uruchom_aplikacje()
+    1. umieść aplikację na _izolowanym_ CPU
+    1. wykonaj_pomiar('izolowany_cpu')
+    1. uruchom_aplikacje()
+    1. umieść aplikację na _izolowanym_ CPU
+    1. Dla każdego procesu ze zbioru {_task\_server.a task\_klient\_A.a task\_klient\_B.a_}:
+        1. Skonfiguruj planistę sched_fifo z priorytetem 99 dla procesu
+    1. wykonaj_pomiar('izolowany_cpu_fio')
+    
+## Wyniki
+### Legenda 
+- _Czasy wykonania_ - jest to pomiar wykonania i uśpienia aplikacji przy pomocy biblioteki `<chrono>`. Sam pomiar wykonywany jest wewnątrz aplikacji
+- _Wywłaszczanie_ - jest to pomiar wywłaszczania za pomocą narzędzia `trace-record`
+
+### Małe obciążenie, krótki czas wykonania. N=10000
+|![](./logs/logs_summary_load10000/normal_execution.log.png "")|
+|:--:|
+| Fig. 1.1.1 - Czasy wykonania. Domyślne CPU. N=10000 |
+
+|![](./logs/logs_summary_load10000/20_05_22__22_25_21/trace_report_full.txt.png "") |
+|:--:|
+| Fig. 1.1.2 - Wywłaszczanie. Domyślne CPU N=10000 |
+
+|![](./logs/logs_summary_load10000/20_05_22__22_25_42/trace_report_full.txt.png "") |
+|:--:|
+| Fig. 1.1.3 - Wywłaszczanie. Stress. Domyślne CPU N=10000 |
+
+
+|![](./logs/logs_summary_load10000/isolated_execution.log.png "")|
+|:--:|
+| Fig. 1.2.1 - Czasy wykonania. Izolowany CPU. N=10000 |
+
+![](./logs/logs_summary_load10000/20_05_22__22_26_09/trace_report_full.txt.png "")|
+|:--:|
+| Fig. 1.2.2 - Wywłaszczanie. Domyślne CPU N=10000 |
+
+|![](./logs/logs_summary_load10000/20_05_22__22_26_42/trace_report_full.txt.png "")|
+|:--:|
+| Fig. 1.2.3 - Wywłaszczanie. Stress. Domyślne CPU N=10000 |
+
+
+|![](./logs/logs_summary_load10000/isolated_fifo_execution.log.png "")|
+|:--:|
+| Fig. 1.3.1 - Czasy wykonania. Izolowany CPU + FIFO. N=10000 |
+
+|![](./logs/logs_summary_load10000/20_05_22__22_27_18/trace_report_full.txt.png "")|
+|:--:|
+| Fig. 1.3.2 - Wywłaszczanie. Izolowany CPU + FIFO. N=10000 |
+
+|![](./logs/logs_summary_load10000/20_05_22__22_27_40/trace_report_full.txt.png "")| 
+|:--:|
+| Fig. 1.3.3 - Wywłaszczanie. Stress. Izolowany CPU + FIFO) |
+
+
+### Średnie obciążenie, średni czas wykonania. N=350000
+|![](./logs/logs_summary_load35000/normal_execution.log.png "") | 
+|:--:|
+| Fig. 2.1.1 - Czasy wykonania. Domyślne CPU. N=350000 |
+
+|![](./logs/logs_summary_load35000/20_05_22__20_50_51/trace_report_full.txt.png "") |
+|:--:|
+| Fig. 2.1.2 - Wywłaszczanie. Domyślne CPU N=350000 |
+
+|![](./logs/logs_summary_load35000/20_05_22__20_51_12/trace_report_full.txt.png "") |
+|:--:|
+| Fig. 2.1.3 - Wywłaszczanie. Stress. Domyślne CPU N=350000 |
+
+
+|![](./logs/logs_summary_load35000/isolated_execution.log.png "")|
+|:--:|
+| Fig. 2.2.1 - Czasy wykonania. Izolowany CPU. N=350000 |
+
+|![](./logs/logs_summary_load35000/20_05_22__20_51_39/trace_report_full.txt.png "")|
+|:--:|
+| Fig. 2.2.2 - Wywłaszczanie. Domyślne CPU N=350000 |
+
+|![](./logs/logs_summary_load35000/20_05_22__20_52_11/trace_report_full.txt.png "")|
+|:--:|
+| Fig. 2.2.3 - Wywłaszczanie. Stress. Domyślne CPU N=350000 |
+
+|![](./logs/logs_summary_load35000/isolated_fifo_execution.log.png "")|
+|:--:|
+| Fig. 2.3.1 - Czasy wykonania. Izolowany CPU + FIFO. N=350000 |
+
+|![](./logs/logs_summary_load35000/20_05_22__20_52_46/trace_report_full.txt.png "")|
+|:--:|
+| Fig. 2.3.2 - Wywłaszczanie. Izolowany CPU + FIFO. N=350000 |
+
+|![](./logs/logs_summary_load35000/20_05_22__20_53_07/trace_report_full.txt.png "")|
+|:--:|
+| Fig. 2.3.3 - Wywłaszczanie. Stress. Izolowany CPU + FIFO. N=350000 |
+
+
+### Małe obciążenie, krótki czas wykonania. N=60000
+|![](./logs/logs_summary_load60000/normal_execution.log.png "")|
+|:--:|
+| Fig. 3.1.1 - Czasy wykonania. Domyślne CPU. N=60000 |
+
+|![](./logs/logs_summary_load60000/20_05_22__22_25_21/trace_report_full.txt.png "")|
+|:--:|
+| Fig. 3.1.2 - Wywłaszczanie. Domyślne CPU N=60000 |
+
+|![](./logs/logs_summary_load60000/20_05_22__22_25_42/trace_report_full.txt.png "")|
+|:--:|
+| Fig. 3.1.3 - Wywłaszczanie. Stress. Domyślne CPU N=60000 |
+
+|![](./logs/logs_summary_load60000/isolated_execution.log.png "")|
+|:--:|
+| Fig. 3.2.1 - Czasy wykonania. Izolowany CPU. N=60000 |
+
+|![](./logs/logs_summary_load60000/20_05_22__22_26_09/trace_report_full.txt.png "") |
+|:--:|
+| Fig. 3.2.2 - Wywłaszczanie. Domyślne CPU N=60000 |
+
+|![](./logs/logs_summary_load60000/20_05_22__22_26_42/trace_report_full.txt.png "")|
+|:--:|
+| Fig. 3.2.3 - Wywłaszczanie. Stress. Domyślne CPU N=60000 |
+
+
+|![](./logs/logs_summary_load60000/isolated_fifo_execution.log.png "")|
+|:--:|
+| Fig. 3.3.1 - Czasy wykonania. Izolowany CPU + FIFO. N=60000 |
+
+|![](./logs/logs_summary_load60000/20_05_22__22_27_18/trace_report_full.txt.png "")| 
+|:--:| 
+| Fig. 3.3.2 - Wywłaszczanie. Izolowany CPU + FIFO. N=60000 |
+
+|![](./logs/logs_summary_load60000/20_05_22__22_27_40/trace_report_full.txt.png "")|
+|:--:|
+| Fig. 3.3.2 - Wywłaszczanie. Stress. Izolowany CPU + FIFO. N=60000 |
+
+
+## Analiza wyników
+
+## Obserwacje
+Badane były również inni planiści, ale ze względu na problemy konfiguracyjne, oraz niesatysfakcjonujące wyniki zostały one wykluczone. 
+
+Dla planisty FIFO (_sched\_fifo_) ustawienie różnych priorytetów blokowało kolejkę mq_queue przed wysłaniem danych. Niestety sygnały linuxowe (_SIGNAL_) propagowane są do procesów o tych samych priorytetach, więc nie było możliwe odczytanie kolejki, dlatego wybrano najwyższy priorytet 99 dla wszystkich procesów aplikacji
+
+## Podsumowanie
+
 
 ## Słownik
 
