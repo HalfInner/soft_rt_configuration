@@ -1,7 +1,6 @@
 #! /usr/bin/bash 
 # For more info: https://man7.org/linux/man-pages/man1/chrt.1.html
 
-
 function usage() {
     echo "Usage:"
     echo "      $0 <test|configure> <reverse>"
