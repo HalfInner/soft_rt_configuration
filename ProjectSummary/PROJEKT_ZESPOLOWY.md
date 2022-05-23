@@ -36,7 +36,7 @@ Implementację Soft Real Time Linux podzieliliśmy na mniejsze problemy, opisane
 Zrozumienie, czym jest system czasu rzeczywistego, było wstępem do projektu. RTOS jest po pierwsze systemem operacyjnym, czyli jego zadaniem jest zarządzanie zadaniami (ang. task), który muszą działać pod rygorem wykonania w określonym czasie. Same task'i muszą być zaprojektowane względem wykonywanego zadania uwzględniając ryzyko przekroczenia czasu wykonania np. w systemach life-safety przekroczenia maksymalnego czasu wykonania zadania może grozić śmiercią poprzez za długie napromieniowanie, albo niewyłączenie elementu mechanicznego.
 
 ## Analiza porównawcza systemu Hard a Soft
-Wybierając pomiędzy żmudnym projektowaniem task'ów, a wygodą rozwoju oprogramowania może się zdarzyć, że potrzebujemy wykonać zadanie w określonym czasie, ale przekroczenie limitu czasowego nie wywoła poważnych szkód, a skończy się błędem jedynie błędem lub opóźnieniem dostarczenia wiadomości. Za przykład może służyć sieć LTE z 1ms ramkami danych. Przerwa w sieci w trakcie wysyłania SMS nie oznacza, że on przepadnie, ale zostanie dostarczony później. 
+Wybierając pomiędzy żmudnym projektowaniem task'ów, a wygodą rozwoju oprogramowania może się zdarzyć, że potrzebujemy wykonać zadanie w określonym czasie, ale przekroczenie limitu czasowego nie wywoła poważnych szkód, a skończy się błędem jedynie błędem lub opóźnieniem dostarczenia wiadomości, w zamian zyskując szybkie dowożenie funkcjonalności przez developerów. Za przykład może służyć sieć LTE z 1ms ramkami danych. Przerwa w sieci w trakcie wysyłania SMS nie oznacza, że on przepadnie, ale zostanie dostarczony później. 
 
 ## Analiza problemu
 System operacyjny odpowiada za wiele istotnych zadań, między innymi udostępnia bezpieczny interfejs do komunikowania się z zasobami sytemu oraz za uruchamianie zadań i dzielenie czasu procesora pomiędzy nimi.
@@ -218,39 +218,27 @@ Wyizolowany CPU3
 |:--:|
 | Fig. 1.1.1 - Czasy wykonania. Domyślne CPU. N=10000 |
 
-|![](./logs/logs_summary_load10000/20_05_22__22_25_21/trace_report_full.txt.png "") |
-|:--:|
-| Fig. 1.1.2 - Wywłaszczanie. Domyślne CPU N=10000 |
-
-|![](./logs/logs_summary_load10000/20_05_22__22_25_42/trace_report_full.txt.png "") |
-|:--:|
-| Fig. 1.1.3 - Wywłaszczanie. Stress. Domyślne CPU N=10000 |
+|![](./logs/logs_summary_load10000/20_05_22__22_25_21/trace_report_full.txt.png "_") |![](./logs/logs_summary_load10000/20_05_22__22_25_42/trace_report_full.txt.png "") |
+|:--:|:--:|
+| Fig. 1.1.2 - Wywłaszczanie. Domyślne CPU N=10000 | Fig. 1.1.3 - Wywłaszczanie. Stress. Domyślne CPU N=10000 |
 
 
 |![](./logs/logs_summary_load10000/isolated_execution.log.png "")|
 |:--:|
 | Fig. 1.2.1 - Czasy wykonania. Izolowany CPU. N=10000 |
 
-![](./logs/logs_summary_load10000/20_05_22__22_26_09/trace_report_full.txt.png "")|
-|:--:|
-| Fig. 1.2.2 - Wywłaszczanie. Domyślne CPU N=10000 |
-
-|![](./logs/logs_summary_load10000/20_05_22__22_26_42/trace_report_full.txt.png "")|
-|:--:|
-| Fig. 1.2.3 - Wywłaszczanie. Stress. Domyślne CPU N=10000 |
+![](./logs/logs_summary_load10000/20_05_22__22_26_09/trace_report_full.txt.png "_")|![](./logs/logs_summary_load10000/20_05_22__22_26_42/trace_report_full.txt.png "")|
+|:--:|:--:|
+| Fig. 1.2.2 - Wywłaszczanie. Domyślne CPU N=10000 | Fig. 1.2.3 - Wywłaszczanie. Stress. Domyślne CPU N=10000 |
 
 
-|![](./logs/logs_summary_load10000/isolated_fifo_execution.log.png "")|
+|![](./logs/logs_summary_load10000/isolated_fifo_execution.log.png "_")|
 |:--:|
 | Fig. 1.3.1 - Czasy wykonania. Izolowany CPU + FIFO. N=10000 |
 
-|![](./logs/logs_summary_load10000/20_05_22__22_27_18/trace_report_full.txt.png "")|
-|:--:|
-| Fig. 1.3.2 - Wywłaszczanie. Izolowany CPU + FIFO. N=10000 |
-
-|![](./logs/logs_summary_load10000/20_05_22__22_27_40/trace_report_full.txt.png "")| 
-|:--:|
-| Fig. 1.3.3 - Wywłaszczanie. Stress. Izolowany CPU + FIFO) |
+|![](./logs/logs_summary_load10000/20_05_22__22_27_18/trace_report_full.txt.png "_")|![](./logs/logs_summary_load10000/20_05_22__22_27_40/trace_report_full.txt.png "")| 
+|:--:|:--:|
+| Fig. 1.3.3 - Wywłaszczanie. Stress. Izolowany CPU + FIFO) |Fig. 1.3.2 - Wywłaszczanie. Izolowany CPU + FIFO. N=10000 |
 
 
 ### Średnie obciążenie, średni czas wykonania. N=350000
@@ -258,82 +246,59 @@ Wyizolowany CPU3
 |:--:|
 | Fig. 2.1.1 - Czasy wykonania. Domyślne CPU. N=350000 |
 
-|![](./logs/logs_summary_load35000/20_05_22__20_50_51/trace_report_full.txt.png "") |
-|:--:|
-| Fig. 2.1.2 - Wywłaszczanie. Domyślne CPU N=350000 |
-
-|![](./logs/logs_summary_load35000/20_05_22__20_51_12/trace_report_full.txt.png "") |
-|:--:|
-| Fig. 2.1.3 - Wywłaszczanie. Stress. Domyślne CPU N=350000 |
+|![](./logs/logs_summary_load35000/20_05_22__20_50_51/trace_report_full.txt.png "_") |![](./logs/logs_summary_load35000/20_05_22__20_51_12/trace_report_full.txt.png "") |
+|:--:|:--:|
+| Fig. 2.1.2 - Wywłaszczanie. Domyślne CPU N=350000 |Fig. 2.1.3 - Wywłaszczanie. Stress. Domyślne CPU N=350000 |
 
 
 |![](./logs/logs_summary_load35000/isolated_execution.log.png "")|
 |:--:|
 | Fig. 2.2.1 - Czasy wykonania. Izolowany CPU. N=350000 |
 
-|![](./logs/logs_summary_load35000/20_05_22__20_51_39/trace_report_full.txt.png "")|
-|:--:|
-| Fig. 2.2.2 - Wywłaszczanie. Domyślne CPU N=350000 |
+|![](./logs/logs_summary_load35000/20_05_22__20_51_39/trace_report_full.txt.png "_")|![](./logs/logs_summary_load35000/20_05_22__20_52_11/trace_report_full.txt.png "")|
+|:--:|:--:|
+| Fig. 2.2.2 - Wywłaszczanie. Domyślne CPU N=350000 |Fig. 2.2.3 - Wywłaszczanie. Stress. Domyślne CPU N=350000 |
 
-|![](./logs/logs_summary_load35000/20_05_22__20_52_11/trace_report_full.txt.png "")|
-|:--:|
-| Fig. 2.2.3 - Wywłaszczanie. Stress. Domyślne CPU N=350000 |
 
 |![](./logs/logs_summary_load35000/isolated_fifo_execution.log.png "")|
 |:--:|
 | Fig. 2.3.1 - Czasy wykonania. Izolowany CPU + FIFO. N=350000 |
 
-|![](./logs/logs_summary_load35000/20_05_22__20_52_46/trace_report_full.txt.png "")|
-|:--:|
-| Fig. 2.3.2 - Wywłaszczanie. Izolowany CPU + FIFO. N=350000 |
-
-|![](./logs/logs_summary_load35000/20_05_22__20_53_07/trace_report_full.txt.png "")|
-|:--:|
-| Fig. 2.3.3 - Wywłaszczanie. Stress. Izolowany CPU + FIFO. N=350000 |
-
+|![](./logs/logs_summary_load35000/20_05_22__20_52_46/trace_report_full.txt.png "_")|![](./logs/logs_summary_load35000/20_05_22__20_53_07/trace_report_full.txt.png "")|
+|:--:|:--:|
+| Fig. 2.3.2 - Wywłaszczanie. Izolowany CPU + FIFO. N=350000 |Fig. 2.3.3 - Wywłaszczanie. Stress. Izolowany CPU + FIFO. N=350000 |
 
 ### Małe obciążenie, krótki czas wykonania. N=60000
 |![](./logs/logs_summary_load60000/normal_execution.log.png "")|
 |:--:|
 | Fig. 3.1.1 - Czasy wykonania. Domyślne CPU. N=60000 |
 
-|![](./logs/logs_summary_load60000/20_05_22__22_25_21/trace_report_full.txt.png "")|
-|:--:|
-| Fig. 3.1.2 - Wywłaszczanie. Domyślne CPU N=60000 |
+|![](./logs/logs_summary_load60000/20_05_22__22_20_19/trace_report_full.txt.png "_")|![](./logs/logs_summary_load60000/20_05_22__22_20_39//trace_report_full.txt.png "")|
+|:--:|:--:|
+| Fig. 3.1.2 - Wywłaszczanie. Domyślne CPU N=60000 |Fig. 3.1.3 - Wywłaszczanie. Stress. Domyślne CPU N=60000 |
 
-|![](./logs/logs_summary_load60000/20_05_22__22_25_42/trace_report_full.txt.png "")|
-|:--:|
-| Fig. 3.1.3 - Wywłaszczanie. Stress. Domyślne CPU N=60000 |
 
 |![](./logs/logs_summary_load60000/isolated_execution.log.png "")|
 |:--:|
 | Fig. 3.2.1 - Czasy wykonania. Izolowany CPU. N=60000 |
 
-|![](./logs/logs_summary_load60000/20_05_22__22_26_09/trace_report_full.txt.png "") |
-|:--:|
-| Fig. 3.2.2 - Wywłaszczanie. Domyślne CPU N=60000 |
-
-|![](./logs/logs_summary_load60000/20_05_22__22_26_42/trace_report_full.txt.png "")|
-|:--:|
-| Fig. 3.2.3 - Wywłaszczanie. Stress. Domyślne CPU N=60000 |
+|![](./logs/logs_summary_load60000/20_05_22__22_21_07//trace_report_full.txt.png "_") |![](./logs/logs_summary_load60000/20_05_22__22_21_40//trace_report_full.txt.png "")|
+|:--:|:--:|
+| Fig. 3.2.2 - Wywłaszczanie. Domyślne CPU N=60000 | Fig. 3.2.3 - Wywłaszczanie. Stress. Domyślne CPU N=60000 |
 
 
 |![](./logs/logs_summary_load60000/isolated_fifo_execution.log.png "")|
 |:--:|
 | Fig. 3.3.1 - Czasy wykonania. Izolowany CPU + FIFO. N=60000 |
 
-|![](./logs/logs_summary_load60000/20_05_22__22_27_18/trace_report_full.txt.png "")| 
-|:--:| 
-| Fig. 3.3.2 - Wywłaszczanie. Izolowany CPU + FIFO. N=60000 |
-
-|![](./logs/logs_summary_load60000/20_05_22__22_27_40/trace_report_full.txt.png "")|
-|:--:|
-| Fig. 3.3.2 - Wywłaszczanie. Stress. Izolowany CPU + FIFO. N=60000 |
+|![](./logs/logs_summary_load60000/20_05_22__22_22_16//trace_report_full.txt.png "_")|![](./logs/logs_summary_load60000/20_05_22__22_22_37//trace_report_full.txt.png "")| 
+|:--:|:--:| 
+| Fig. 3.3.2 - Wywłaszczanie. Izolowany CPU + FIFO. N=60000 |Fig. 3.3.2 - Wywłaszczanie. Stress. Izolowany CPU + FIFO. N=60000 |
 
 
 ## Analiza wyników
 
-## Obserwacje
+## Dodatkowe Obserwacje
 Badane były również inni planiści, ale ze względu na problemy konfiguracyjne, oraz niesatysfakcjonujące wyniki zostały one wykluczone. 
 
 Dla planisty FIFO (_sched\_fifo_) ustawienie różnych priorytetów blokowało kolejkę mq_queue przed wysłaniem danych. Niestety sygnały linuxowe (_SIGNAL_) propagowane są do procesów o tych samych priorytetach, więc nie było możliwe odczytanie kolejki, dlatego wybrano najwyższy priorytet 99 dla wszystkich procesów aplikacji
