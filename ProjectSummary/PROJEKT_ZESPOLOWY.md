@@ -13,8 +13,7 @@ Kajetan Brzuszczak pełnił rolę kierownika projektu oraz przygotował analizę
 ## Założenia projektu
 Problemy zadań czasu rzeczywistego rozwiązywane są różnymi sposobami. Popularnym wysokopoziomowym rozwiązaniem jest skompilowanie i wgranie mikrojądra RTLinux na licencji OpenSource. Niestety ingerencja w jądro systemu nie zawsze jest możliwa, dlatego celem tego projektu jest zbadanie możliwości wbudowanego kernela dla jednej ze znanych dystrybucji i manipulowanie zadaniami lub procesami z poziomu konsoli lub aplikacji korzystającej z glibc, tak, aby wykonywały się w przewidywalnym czasie. Wyzwaniem będzie izolowanie aplikacji pomiędzy rdzeniami, gdzie domyślnie ta opcja jest ograniczona bez instalacji mikrojądra.
 
-Zakładamy, że celem jest Soft Real Time, gdzie przekroczenie czasu wykonania nie skutkuje krytycznym błędem, ale obniża znacznie jakość usługi. Punktem odniesienia będzie wykonywanie zadań w ciągu 1ms.
-Podsumowanie będzie zawierało analizę sukcesu projektu.
+Zakładamy, że celem jest system Soft Real Time, gdzie przekroczenie czasu wykonania nie skutkuje krytycznym błędem, ale obniża znacznie jakość usługi. Punktem odniesienia będzie wykonywanie zadań w ciągu 1ms. Podsumowanie będzie zawierało analizę sukcesu projektu.
 
 ## Współpraca
 W celu usprawnienia współpracy wybraliśmy parę narzędzi
@@ -60,7 +59,7 @@ Dostępni planiści POSIX:
 W naszym przypadku, nie chcemy być sprawiedliwi, ale wykonywać zadania jedno za drugim w celu minimalizacji czasu spania (IDLE). Takie warunki spełni SCHED_FIFO, gdzie skończone zadanie już czeka w kolejce do wykonania. 
 
 **Planista FIFO**
-SCHED_FIFO: Planisty typu pierwszy wchodzi pierwszy wychodzi.
+SCHED_FIFO: Planista typu "pierwszy wchodzi pierwszy wychodzi".
 SCHED_FIFO może być tylko użyty z procesami z priorytetem wyższym niż 0, co znaczy, że kiedy proces FIFO startuje od razu wywłaszcza inne procesy korzystające z planisty OTHER, BATCH, bądź IDLE. Planista SCHED_FIFO jest prostym algorytmem bez time-slicing. 
 
 Poniższe reguły są stosowane w przypadku użycia planisty SCHED_FIFO
@@ -255,7 +254,7 @@ Wyizolowany CPU3
     | Server Work  | Czas potrzebny na wykonanie zadanie |
 
     ```txt
-    Start        Pause               Resume
+    Start        Pause             Resume/Start
      |    WORK    |       SLEEP        |
      x------------x--------------------x
      |            TOTAL                |  
@@ -313,7 +312,7 @@ Wyizolowany CPU3
 
 |![](./logs/logs_summary_load35000/20_05_22__20_51_39/trace_report_full.txt.png "_")|![](./logs/logs_summary_load35000/20_05_22__20_52_11/trace_report_full.txt.png "")|
 |:--:|:--:|
-| Fig. 2.2.2 - Wywłaszczanie. Domyślne CPU N=350000 |Fig. 2.2.3 - Wywłaszczanie. Stress. Domyślne CPU N=350000 |
+| Fig. 2.2.2 - Wywłaszczanie. Izolowany CPU N=350000 |Fig. 2.2.3 - Wywłaszczanie. Stress. Izolowany CPU N=350000 |
 
 
 |![](./logs/logs_summary_load35000/isolated_fifo_execution.log.png "")|
@@ -340,7 +339,7 @@ Wyizolowany CPU3
 
 |![](./logs/logs_summary_load60000/20_05_22__22_21_07//trace_report_full.txt.png "_") |![](./logs/logs_summary_load60000/20_05_22__22_21_40//trace_report_full.txt.png "")|
 |:--:|:--:|
-| Fig. 3.2.2 - Wywłaszczanie. Domyślne CPU N=60000 | Fig. 3.2.3 - Wywłaszczanie. Stress. Domyślne CPU N=60000 |
+| Fig. 3.2.2 - Wywłaszczanie. Izolowany CPU N=60000 | Fig. 3.2.3 - Wywłaszczanie. Stress. Izolowany CPU N=60000 |
 
 
 |![](./logs/logs_summary_load60000/isolated_fifo_execution.log.png "")|
@@ -354,29 +353,41 @@ Wyizolowany CPU3
 
 ## Analiza wyników - Wnioski
 * Czasy wykonania:
-    * Wszystkie trzy konfiguracje zachowują się w sposób, co najmniej zbliżony, z początkowymi przewidywaniami.
-    * Po uruchomieniu obciążania CPU wykorzystanie jego jest na tyle duże, że procesor nie wchodzi w stan IDLE. np Fig. 3.1.3.
     * Ciekawym faktem jest to, czas wykonywania danego zadania _Server Work_ jest w przybliżeniu stały dla każdego N i każdego testu Normal/Isolated/IsolatedFifo, bez znaczenia, czy użyliśmy izolowanego procesora, czy planisty FIFO, może to świadczyć o tym, że wykonanie zadania jest na tyle krótkie, że żaden inny proces nie jest w stanie go wywłaszczyć zanim nie skończy swojej pracy.
-    * Zasadniczą różnicą na korzyść Isolated CPU jest całkowity czas wykonania, gdzie przy domyślnym CPU widać znaczne perturbacje w czasach uśpienia aplikacji dla każdego z N, co następnie przekłada się na nieprzewidywalność aplikacji, co jest problemem jeżeli mielibyśmy rygor wykonania. 
+    * Zasadniczą różnicą na korzyść Isolated CPU jest całkowity czas wykonania, gdzie przy domyślnym CPU widać znaczne perturbacje w czasach uśpienia aplikacji dla każdego z N, co następnie przekłada się na nieprzewidywalność aplikacji, co jest problemem jeżeli zechcielibyśmy rygor wykonania. 
     * W trybie Isolated/IsolatedFifo obciążenie systemu nie wpływa znacząco na aplikację. Przed i po obciążeniu wykresy wyglądają niemal identycznie. Choć jesteśmy w stanie zauważyć małe wydłużenie czasu dla systemu obciążonego. Porównując Fig. 3.2.1 i Fig. 3.3.1 widzimy, że używając SCHED_FIFO różnica jest jeszcze mniejsza. Wynika to prawdopodobnie z tego, że przy kolejce FIFO zadania mają wyższy priorytet niż _0_, co uniemożliwia wywłaszczanie przez inne procesy na poziomie Kernela np. dostęp do systemu plików.
-    * Niestety przez brak zewnętrznej aplikacji, która by synchronizowała budzenie aplikacji nie uzyskaliśmy rygoru wykonania w tych samych odstępach czasu
-    * Jeżeli chodzi o prędkość wykonania to IsolatedFIFO jest najszybszym trybem z wynikiem około 1750us dla piku, dla zwykłego wykonania jest to około 1250us. Niestety najwolniejszy okazał się tryb Isolated, który mimo największej stabilności - najbardziej poziomej lini - nie schodził poniżej około 3500. Niestety przyczyna tego jest nieznana.
+    * Niestety przez brak zewnętrznej aplikacji, która by synchronizowała budzenie aplikacji nie uzyskaliśmy rygoru wykonania w tych samych odstępach czasu.
+    * Jeżeli chodzi o prędkość wykonania to IsolatedFIFO jest najszybszym trybem z wynikiem około 1750us dla piku, dla zwykłego wykonania jest to około 1250us. Niestety najwolniejszy okazał się tryb Isolated, który mimo największej stabilności - najbardziej poziomej lini - nie schodził poniżej około 3500. Niestety przyczyna tego zachowania nie jest znana.
+    * Jeżeli o długość uśpienia. To bezkonkurencyjny wydaje się IsolatedFifo, gdzie nie licząc pików, uśpienie zawsze jest bliskie zero. Więc procesy są niemal natychmiast gotowe to działania, jeżeli byłby odpowiednie wysterowane.
 * Wywłaszczanie:
+    * Program do obciążania systemu działa i można to zaobserwować dla każdego rodzaju testu, gdzie LOAD_CPU utrzymuje się ciągle na wartości 1.
+    * Dla każdego _Wywłaszczania. Stress. Domyślne CPU_. Widzimy na wykresie coś na wzór gradientu użycia procesora. Wynika to z tego, że nasza aplikacja współdzieli zasoby z innymi procesami i każdy z tych procesów walczy o swój czas procesora.
+    * Dla każdego _Wywłaszczania. Stress. Izolowany CPU_. Widzimy wypełniony prostokąt dla aplikacji. Oznacza to, że procesy Server, Klient i Klient wywłaszczają się nawzajem i wykorzystują 100% czasu rdzenia.
+    * Dla każdego _Wywłaszczania. Stress. Izolowany+ FIFO. CPU_. Widzimy przerwy w prostokącie, kiedy przechodzimy do procesu IDLE. Stan takiego działania nie jest znany. 
+    * Stan IDLE dla Rdzenia numer 3 nie pojawia się dla Domyślnego wywołania, ponieważ aby przejść do IDLE inny proces wcześniej musi go wywłaszczyć, więc nie pojawia się w logach trace-cmd i też nie widzimy go na wykresie.
+    * Po uruchomieniu obciążania CPU wykorzystanie jego jest na tyle duże, że procesor nie wchodzi w stan IDLE. np Fig. 3.1.3.
+* Cechy wspólne:
+    * Charakterystyczny wykres piły dla IsolatedFIFO w wykresach czasu wykonania pokrywa się z pojawianiem procesu IDLE w wywłaszczaniu. Niestety geneza tego zachowania nie została poznana. Możemy tylko spekulować, że aplikacja jest zblokowana na kolejce mq_queue i czeka na notyfikacje, lecz niestety sam projekt aplikacji przewiduje takie zachowanie i odczyty oraz zapisy są _nieblokujące_ (flaga `O_NONBLOCK` dla mq_queue), więc nie powinniśmy być tak długo w stanie IDLE. Drugim podejrzanym mogą być niewyłączone sygnały przerwań, które przy tak dużych odpytywaniach mogą się skolejkować. Weryfikacja tego jest już poza zakresem tego badania.
 
-
-
-
+* Błędy pomiarowe:
+    * Fig 2.2.3 - Początek wykresu bez obciążenia. Przyczyna nieznana.
+    * Fig 1.2.1 - Jeden pik na wartość prawie 16000us czasu wykonania. Przyczyna nieznana.
 
 ## Dodatkowe Obserwacje
-Badane były również inni planiści, ale ze względu na problemy konfiguracyjne, oraz niesatysfakcjonujące wyniki zostały one wykluczone. 
+Badani byli również inni planiści, ale ze względu na problemy konfiguracyjne, oraz niesatysfakcjonujące wyniki zostały porzucone.
 
 Dla planisty FIFO (_sched\_fifo_) ustawienie różnych priorytetów blokowało kolejkę mq_queue przed wysłaniem danych. Niestety sygnały linuxowe (_SIGNAL_) propagowane są do procesów o tych samych priorytetach, więc nie było możliwe odczytanie kolejki, dlatego wybrano najwyższy priorytet 99 dla wszystkich procesów aplikacji
 
 ## Podsumowanie
+Badanie uważam za duży sukces. Wszystkie trzy konfiguracje zachowują się w sposób, co najmniej zbliżony, z początkowymi przewidywaniami, choć trzeba uwzględnić małe odchylenia.
 
+Bezkonkurencyjnym zwycięzcą jeżeli chodzi o czas wykonania od czasu uruchomienia zostaje IsolatedFIFO, czyli przeniesienie procesów na izolowany CPU, gdzie nie ma uruchamianych innych procesów, a dodatkowo użycie specjalnego planisty SCHED_FIFO. To on może pogodzić cechy systemy RTOS oraz zwykłego użytkowania Linuxa. 
+
+Nie wiadomym pozostają 1ms piki, które wymagały by dalszej analizy. W innym przypadku nasze zadania czasu rzeczywistego wymagałyby dodatkowego dopasowania i uwzględnienia ich. Elementem ratującym całą sytuację jest fakt, że piki wydają się być bardzo regularne i przewidywalne.
+
+ Korzystanie z mechanizmów tak niskopoziomowych jak manualna konfiguracja schedulera jest czasochłonne, a wyniki mogę dalej odbiegać od idealnych. Wymaga to na pewno wiedzy eksperckiej, aby wykorzystać zalety ręcznej konfiguracji procesów a jednocześnie nie marnując wolnego czasu procesora.
 
 ## Słownik
-
 | Termin     | Znaczenie |
 | -          | - |
 | CPU        | Procesor| 
@@ -386,10 +397,8 @@ Dla planisty FIFO (_sched\_fifo_) ustawienie różnych priorytetów blokowało k
 | FIFO       | Kolejka pierwszy wchodzi pierwszy wychodzi - First In First out |
 | Bootloader | Program do uruchamiania systemu linux |
 
-## Listingi
-Tutaj będą umieszczone najważniejsze przeważnie fragmenty funkcjonalności. Cały kod źródłowy udostępniony jest na GitHub'ie 
 
-# Bibiliografia
+# Bibliografia
 * Sched - Manual Linux  
 https://man7.org/linux/man-pages/man7/sched.7.html 
 * Sched Affinity – Manual Linux  
@@ -398,6 +407,7 @@ https://linux.die.net/man/2/sched_setaffinity
 https://man7.org/linux/man-pages/man8/cron.8.html
 * RT Linux Manual  
 https://wiki.t-firefly.com/en/Firefly-Linux-Guide/manual_rtlinux.html
-* Konfiguracja isolcpus
+* Konfiguracja isolcpus  
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_for_real_time/7/html/tuning_guide/isolating_cpus_using_tuned-profiles-realtime
-
+* Listingi - Link do repozytorium  
+https://github.com/HalfInner/soft_rt_configuration
