@@ -379,7 +379,7 @@ Badani byli również inni planiści, ale ze względu na problemy konfiguracyjne
 Dla planisty FIFO (_sched\_fifo_) ustawienie różnych priorytetów blokowało kolejkę mq_queue przed wysłaniem danych. Niestety sygnały linuxowe (_SIGNAL_) propagowane są do procesów o tych samych priorytetach, więc nie było możliwe odczytanie kolejki, dlatego wybrano najwyższy priorytet 99 dla wszystkich procesów aplikacji
 
 ## Podsumowanie
-Badanie uważam za duży sukces. Wszystkie trzy konfiguracje zachowują się w sposób, co najmniej zbliżony, z początkowymi przewidywaniami, choć trzeba uwzględnić małe odchylenia.
+Wszystkie trzy konfiguracje zachowują się w sposób, co najmniej zbliżony, z początkowymi przewidywaniami. Uwzględniając małe odchylenia, projekt uważam za duży sukces. Wykresy dla poszczególnych konfiguracji różnią się diametralnie, więc możemy w miarę prosto zaobserwować z jakiego rozwiązania korzystamy. 
 
 Bezkonkurencyjnym zwycięzcą jeżeli chodzi o czas wykonania od czasu uruchomienia zostaje IsolatedFIFO, czyli przeniesienie procesów na izolowany CPU, gdzie nie ma uruchamianych innych procesów, a dodatkowo użycie specjalnego planisty SCHED_FIFO. To on może pogodzić cechy systemy RTOS oraz zwykłego użytkowania Linuxa. 
 
@@ -393,9 +393,9 @@ Nie wiadomym pozostają 1ms piki, które wymagały by dalszej analizy. W innym p
 | CPU        | Procesor| 
 | Core       | Rdzeń Procesora |
 | HW         | Sprzęt i jego specyfikacja |
-| Scheduler  | Planista
+| Scheduler  | Planista |
 | FIFO       | Kolejka pierwszy wchodzi pierwszy wychodzi - First In First out |
-| Bootloader | Program do uruchamiania systemu linux |
+| Bootloader | Program do uruchamiania systemu linux posiadający możliwość konfiguracji systemu |
 
 
 # Bibliografia
