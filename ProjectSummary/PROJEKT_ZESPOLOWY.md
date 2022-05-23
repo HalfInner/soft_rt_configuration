@@ -46,6 +46,7 @@ W przypadku, gdy użytkownik zechce, aby dać priorytet zadaniu jest to możliwe
 Wychodząc z powyższych założeń musimy przeanalizować rodzaje dostępnych planistów i sposoby ograniczenie wpływu innych procesów na wykonanie dedykowanego zadania.
 
 ## Planiści
+**Dostępni Planiści**
 Planiści we współczesnych komputerach uruchamiają procesy "sprawiedliwie", czyli pozwalają każdemu procesowi na użycie cząstki procesora, co wpływa na to, że są nieprzewidywalni. "CFS - Completely Fair Scheduler", czyli "Całkowicie Sprawiedliwy Planista" jest aktualnie używany.
 
 Dostępni planiści POSIX:
@@ -57,6 +58,24 @@ Dostępni planiści POSIX:
 * SCHED_RR
 
 W naszym przypadku, nie chcemy być sprawiedliwi, ale wykonywać zadania jedno za drugim w celu minimalizacji czasu spania (IDLE). Takie warunki spełni SCHED_FIFO, gdzie skończone zadanie już czeka w kolejce do wykonania. 
+
+**Planista FIFO**
+SCHED_FIFO: Planisty typu pierwszy wchodzi pierwszy wychodzi.
+SCHED_FIFO może być tylko użyty z procesami z priorytetem wyższym niż 0, co znaczy, że kiedy proces FIFO startuje od razu wywłaszcza inne procesy korzystające z planisty OTHER, BATCH, bądź IDLE. Planista SCHED_FIFO jest prostym algorytmem bez time-slicing. 
+
+Poniższe reguły są stosowane w przypadku użycia planisty SCHED_FIFO
+1. Raz wywłaszczony proces zostaje uśpiony i położony na koniec kolejki dla swojego priorytetu i pozostaje zablokowany tak długo, aż wszystkie procesy z wyższym priorytetem nie zostaną zatrzymane.
+1. Zablokowanie procesu umieszcza go z powrotem na koniec kolejki z danym priorytetem.
+1. Jeżeli zmienimy konfigurację planisty dla danego procesu następujące reguły są zaaplikowane.
+    * Jeżeli priorytet procesu został zwiększony zostaje on umieszczony na końcu kolejki z nowym priorytetem. Co może skutkować  natychmiastowym wywłaszczaniem procesów z niższym priorytetem.
+    * Jeżeli priorytet procesu pozostał niezmieniony, to jego pozycja w kolejca nie ulega zmianie.
+    * Jeżeli priorytet procesy został zmniejszony, to zostaje on umieszczony na początku kolejki z nowym priorytetem. 
+1. Proces korzystający z sched_yield zostaje automatycznie umieszczony na końcu swojej kolejki FIFO
+
+Proces FIFO może zostać zablokowany przez:
+* Zapytanie do systemu o zasoby I/O 
+* Wywłaszczony przez proces o wyższym priorytecie
+* Proces wywoła metodę sched_yield
 
 ## Izolowanie 
 Poza manipulacją planistami istnieją sposoby na spriorytezowanie samych procesów. Przykładowo narzędziem 'Nice' możemy uruchomić proces dając możliwość wywłaszczenia go w każdym momencie czasu. Możemy np uruchomić wszystkie procesy poza dedykowanym w tym trybie co pozwoli na wysoki priorytet tego procesu.
@@ -108,11 +127,13 @@ Lista wad rozwiązania
 1. Nieznana wydajność - aby porównać wydajność potrzebujemy aplikacji, która może działać zarówno na dedykowanym procesorze i jak domyślnym/losowym. W dużych projektach, nie jest możliwe przeniesienie takiej aplikacji w czasie w którym możemy porównać wydajność.
 1. Wspólne zasoby - Pomimo izolacji na poziomie CPU dostęp do Kernela lub HW jest już współdzielony, więc inne procesy dalej mogą pośrednio wpływać na te na dedykowanym rdzeniu.
 1. Dynamiczna częstotliwość CPU - procesor może pracować w różnych częstotliwościach w zależności od obciążenia w zakresie **[600, 1800]**. Co może skutkować różnym czasem wykonywania zadania
+1. Wszystkie procesy są jednowątkowe - aplikacje wielowątkowe nie zostały przebadane
+1. Brak 1ms notyfikacji - w celu aplikacja była wywłaszczana co ten sam czas potrzebowalibyśmy dodatkowej kontroli z zewnątrz. Mógłby być to proces, który po upływie 1ms zwalnia semafory. W innym przypadku, aplikacja jest odpalana co jakiś czas.
 
 # Weryfikacja Systemu Soft Real Time
 
 ## Założenia
-Celem badania jest skonfigurowanie systemu Linux w taki sposób, aby wykonywanie przykładowej aplikacji było jak najbardziej przewidywalne.
+Celem badania jest skonfigurowanie systemu Linux w taki sposób, aby wykonywanie przykładowej aplikacji było jak najbardziej przewidywalne. 
 
 Badanie będzie polegało na pomiarze czasu wywłaszczania procesu w trzech różnych konfiguracjach. 
 * Tryb Tradycyjny - uruchomienie programu w jak najmniej zmienionym systemie.
@@ -151,7 +172,18 @@ Izolowany procesor wymaga jasnego określenia CPU do uruchomienia aplikacji. W i
 
 W celu weryfikacji na którym CPU został uruchomiony aktualny process, możemy uruchomić komendę `ps -ae -o command= -o psr=`, gdzie będą wymienione procesy z ich aktualnym przypisaniem (ang. affinity) do CPU.
 
-**Sda**
+Po skonfigurowaniu jzolacji, musimy się liczyć, że niektóre procesy systemowe dalej będą tam uruchomione.
+```txt
+        26 [cpuhp/3]
+        27 [migration/3]
+        28 [ksoftirqd/3]
+        29 [kworker/3:0-mm_percpu_wq]
+        37 [kworker/3:1-events]
+       736 [kworker/3:1H-kblockd]
+       737 [kworker/3:2H]
+```
+
+**Scheduler Aplikacji**
 Po uruchomieniu aplikacji wymagane jest skonfigurowanie planisty dla tego procesu narzędziem chrt
 `chrt -f -p 99 $server_task_pid`
 
@@ -175,7 +207,7 @@ Składa się z trzech kroków:
 Wyizolowany CPU3 
 
 **Scenariusz**
-* funkcja uruchom_aplikacje():
+* funkcja uruchom_aplikacje(N):
     1. Uruchom aplikację Server z parametrem **N**
     1. Uruchom aplikację Klient z parametrem 'A'
     1. Uruchom aplikację Klient z parametrem 'B'
@@ -196,13 +228,13 @@ Wyizolowany CPU3
 1. Zbuduj aplikację Server jako _task\_server.a_
 1. Zbuduj aplikację Klient jako _task\_klient\_A.a_ oraz  _task\_klient\_B.a_ 
 1. Dla każdego **N** w zbiorze {10000, 35000, 60000}:
-    1. uruchom_aplikacje()
+    1. uruchom_aplikacje(**N**)
     1. umieść aplikację na _domyślnych_ CPU
     1. wykonaj_pomiar('domyślny_cpu')
-    1. uruchom_aplikacje()
+    1. uruchom_aplikacje(**N**)
     1. umieść aplikację na _izolowanym_ CPU
     1. wykonaj_pomiar('izolowany_cpu')
-    1. uruchom_aplikacje()
+    1. uruchom_aplikacje(**N**)
     1. umieść aplikację na _izolowanym_ CPU
     1. Dla każdego procesu ze zbioru {_task\_server.a task\_klient\_A.a task\_klient\_B.a_}:
         1. Skonfiguruj planistę sched_fifo z priorytetem 99 dla procesu
@@ -210,8 +242,32 @@ Wyizolowany CPU3
     
 ## Wyniki
 ### Legenda 
-- _Czasy wykonania_ - jest to pomiar wykonania i uśpienia aplikacji przy pomocy biblioteki `<chrono>`. Sam pomiar wykonywany jest wewnątrz aplikacji
-- _Wywłaszczanie_ - jest to pomiar wywłaszczania za pomocą narzędzia `trace-record`
+- _Czasy wykonania_ - jest to pomiar wykonania i uśpienia aplikacji przy pomocy biblioteki `<chrono>`. Sam pomiar wykonywany jest wewnątrz aplikacji. Oś Y określa czas wykonania zadania w mikrosekundach - jeden punkt to średnia ze 100 pomiarów
+    > **Uwaga**  
+    > Wykresy typu "Czas wykonania", trzeba podzielić na część lewą i prawą, mniej więcej po środku.  
+    > *Lewa* część jest to test bez uruchomionego ogólnego obciążenia systemu.  
+    > *Prawa* część jest to test z uruchomionym ogólnym obciążeniem systemu przy pomocy narzędzia stress
+
+    | Zadanie | Opis |
+    | - | - |
+    | Server Total | Czas wykonania zadania pomiędzy dwoma rozpoczęciami |
+    | Server Sleep | Czas przez jaki aplikacji była uśpiona |
+    | Server Work  | Czas potrzebny na wykonanie zadanie |
+
+    ```txt
+    Start        Pause               Resume
+     |    WORK    |       SLEEP        |
+     x------------x--------------------x
+     |            TOTAL                |  
+    ```
+- _Wywłaszczanie_ - jest to pomiar wywłaszczania za pomocą narzędzia `trace-record`. I jest to pomiar wykonywane na zewnątrz aplikacji. Oś Y określa, czy proces jest wywłaszczony w danym momencie _1_, czy nie _0_. We wzorze \<nazwa_procesu\>_CPU\<I\> -  I określa o którym CPU, na którym uruchomiony jest dany proces. 
+    | nazwa procesu | opis |
+    | - | - |
+    | task_server.a | zadanie Server |
+    | task_client_A.a | zadanie Klienta |
+    | task_client_B.a | zadanie Klienta |
+    | \<IDLE\> | process bezczynności |
+    | LOAD_CPU | są to wszystkie inne procesy poza tymi wyżej |
 
 ### Małe obciążenie, krótki czas wykonania. N=10000
 |![](./logs/logs_summary_load10000/normal_execution.log.png "")|
@@ -296,7 +352,20 @@ Wyizolowany CPU3
 | Fig. 3.3.2 - Wywłaszczanie. Izolowany CPU + FIFO. N=60000 |Fig. 3.3.2 - Wywłaszczanie. Stress. Izolowany CPU + FIFO. N=60000 |
 
 
-## Analiza wyników
+## Analiza wyników - Wnioski
+* Czasy wykonania:
+    * Wszystkie trzy konfiguracje zachowują się w sposób, co najmniej zbliżony, z początkowymi przewidywaniami.
+    * Po uruchomieniu obciążania CPU wykorzystanie jego jest na tyle duże, że procesor nie wchodzi w stan IDLE. np Fig. 3.1.3.
+    * Ciekawym faktem jest to, czas wykonywania danego zadania _Server Work_ jest w przybliżeniu stały dla każdego N i każdego testu Normal/Isolated/IsolatedFifo, bez znaczenia, czy użyliśmy izolowanego procesora, czy planisty FIFO, może to świadczyć o tym, że wykonanie zadania jest na tyle krótkie, że żaden inny proces nie jest w stanie go wywłaszczyć zanim nie skończy swojej pracy.
+    * Zasadniczą różnicą na korzyść Isolated CPU jest całkowity czas wykonania, gdzie przy domyślnym CPU widać znaczne perturbacje w czasach uśpienia aplikacji dla każdego z N, co następnie przekłada się na nieprzewidywalność aplikacji, co jest problemem jeżeli mielibyśmy rygor wykonania. 
+    * W trybie Isolated/IsolatedFifo obciążenie systemu nie wpływa znacząco na aplikację. Przed i po obciążeniu wykresy wyglądają niemal identycznie. Choć jesteśmy w stanie zauważyć małe wydłużenie czasu dla systemu obciążonego. Porównując Fig. 3.2.1 i Fig. 3.3.1 widzimy, że używając SCHED_FIFO różnica jest jeszcze mniejsza. Wynika to prawdopodobnie z tego, że przy kolejce FIFO zadania mają wyższy priorytet niż _0_, co uniemożliwia wywłaszczanie przez inne procesy na poziomie Kernela np. dostęp do systemu plików.
+    * Niestety przez brak zewnętrznej aplikacji, która by synchronizowała budzenie aplikacji nie uzyskaliśmy rygoru wykonania w tych samych odstępach czasu
+    * Jeżeli chodzi o prędkość wykonania to IsolatedFIFO jest najszybszym trybem z wynikiem około 1750us dla piku, dla zwykłego wykonania jest to około 1250us. Niestety najwolniejszy okazał się tryb Isolated, który mimo największej stabilności - najbardziej poziomej lini - nie schodził poniżej około 3500. Niestety przyczyna tego jest nieznana.
+* Wywłaszczanie:
+
+
+
+
 
 ## Dodatkowe Obserwacje
 Badane były również inni planiści, ale ze względu na problemy konfiguracyjne, oraz niesatysfakcjonujące wyniki zostały one wykluczone. 
